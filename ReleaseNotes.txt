@@ -1,0 +1,11 @@
+Version 1:
+
+End-users are requested to use proper "environment" and merchant key. 
+Failing to so will make the client to throw 'Juspay_Exception_Configuration' exception.
+
+Examples are provided.
+
+
+Version 2:
+
+Example calls for return url in init call have been added.
