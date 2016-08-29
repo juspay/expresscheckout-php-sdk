@@ -2,42 +2,57 @@
 
 namespace Juspay\Model;
 
-use Juspay\RequestMethod;
+use Juspay\Exception\APIConnectionException;
+use Juspay\Exception\APIException;
+use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\RequestMethod;
 
+/**
+ * Class Order
+ *
+ * @property string $id
+ * @property string $orderId
+ * @property string $merchantId
+ * @property string $txnId
+ * @property float $amount
+ * @property string $currency
+ * @property string $customerId
+ * @property string $customerEmail
+ * @property string $customerPhone
+ * @property string $description
+ * @property string $productId
+ * @property int $gatewayId
+ * @property string $returnUrl
+ * @property string $udf1
+ * @property string $udf2
+ * @property string $udf3
+ * @property string $udf4
+ * @property string $udf5
+ * @property string $udf6
+ * @property string $udf7
+ * @property string $udf8
+ * @property string $udf9
+ * @property string $udf10
+ * @property string $status
+ * @property int $statusId
+ * @property bool $refunded
+ * @property float $amountRefunded
+ * @property Refund[] $refunds
+ * @property string $bankErrorCode
+ * @property string $bankErrorMessage
+ * @property Card $card
+ * @property PaymentGatewayResponse $paymentGatewayResponse
+ *
+ * @package Juspay\Model
+ */
 class Order extends JuspayEntity {
-    public $id;
-    public $orderId;
-    public $merchantId;
-    public $txnId;
-    public $amount;
-    public $currency;
-    public $customerId;
-    public $customerEmail;
-    public $customerPhone;
-    public $description;
-    public $productId;
-    public $gatewayId;
-    public $returnUrl;
-    public $udf1;
-    public $udf2;
-    public $udf3;
-    public $udf4;
-    public $udf5;
-    public $udf6;
-    public $udf7;
-    public $udf8;
-    public $udf9;
-    public $udf10;
-    public $status;
-    public $statusId;
-    public $refunded;
-    public $amountRefunded;
-    public $refunds;
-    public $bankErrorCode;
-    public $bankErrorMessage;
-    public $card;
-    public $paymentGatewayResponse;
+    
+    /**
+     * Constructor
+     *
+     * @param array $params
+     */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
@@ -56,6 +71,19 @@ class Order extends JuspayEntity {
             }
         }
     }
+    
+    /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function create($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
@@ -65,6 +93,19 @@ class Order extends JuspayEntity {
         $response = self::updateOrderResponseStructure ( $response );
         return new Order ( $response );
     }
+    
+    /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function status($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
@@ -73,6 +114,19 @@ class Order extends JuspayEntity {
         $response = self::updateOrderResponseStructure ( $response );
         return new Order ( $response );
     }
+    
+    /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function update($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
@@ -80,10 +134,36 @@ class Order extends JuspayEntity {
         $response = self::makeServiceCall ( "/order/update", $params, RequestMethod::POST, $requestOptions );
         return new Order ( $response );
     }
+    
+    /**
+     *
+     * @param array|null $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return OrderList
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function listAll($params, $requestOptions = null) {
         $response = self::makeServiceCall ( "/order/list", $params, RequestMethod::GET, $requestOptions );
         return new OrderList ( $response );
     }
+    
+    /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function refund($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
@@ -93,7 +173,13 @@ class Order extends JuspayEntity {
         return new Order ( $response );
     }
     
-    // Restructuring the order response.
+    /**
+     * Restructuring the order response.
+     *
+     * @param array $response
+     *
+     * @return array
+     */
     private static function updateOrderResponseStructure($response) {
         if (array_key_exists ( "card", $response )) {
             $card = $response ["card"];

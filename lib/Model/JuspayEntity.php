@@ -2,15 +2,35 @@
 
 namespace Juspay\Model;
 
-use Juspay\JuspayEnvironment;
-use Juspay\RequestMethod;
-use Juspay\RequestOptions;
 use Juspay\Exception\APIConnectionException;
 use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\JuspayEnvironment;
+use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
+/**
+ * Class JuspayEntity
+ *
+ * @package Juspay\Model
+ */
 abstract class JuspayEntity {
+    
+    /**
+     *
+     * @param string $path
+     * @param array|null $params
+     * @param string $method
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return array
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     protected static function makeServiceCall($path, $params, $method, $requestOptions) {
         if ($requestOptions == null) {
             $requestOptions = RequestOptions::createDefault ();
@@ -38,7 +58,11 @@ abstract class JuspayEntity {
             }
         } else {
             curl_setopt ( $curlObject, CURLOPT_POST, 1 );
-            curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $params );
+            if ($params == null) {
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
+            } else {
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $params );
+            }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
         $response = curl_exec ( $curlObject );
@@ -78,11 +102,27 @@ abstract class JuspayEntity {
             }
         }
     }
+    
+    /**
+     *
+     * @param string $input
+     * @param string|null $separator
+     *
+     * @return string
+     */
     protected function camelize($input, $separator = '_') {
         $output = str_replace ( $separator, '', ucwords ( $input, $separator ) );
         $output [0] = strtolower ( $output [0] );
         return $output;
     }
+    
+    /**
+     *
+     * @param array $params
+     * @param array $response
+     *
+     * @return array
+     */
     protected static function addInputParamsToResponse($params, $response) {
         foreach ( array_keys ( $params ) as $key ) {
             $response [$key] = $params [$key];

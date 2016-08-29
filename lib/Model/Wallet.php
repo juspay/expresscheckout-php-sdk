@@ -2,16 +2,31 @@
 
 namespace Juspay\Model;
 
-use Juspay\RequestMethod;
+use Juspay\Exception\APIConnectionException;
+use Juspay\Exception\APIException;
+use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\RequestMethod;
 
+/**
+ * Class Wallet
+ *
+ * @property string $id
+ * @property string $object
+ * @property string $wallet
+ * @property string $token
+ * @property float $currentBalance
+ * @property DateTime $lastRefreshed
+ *
+ * @package Juspay\Model
+ */
 class Wallet extends JuspayEntity {
-    public $id;
-    public $object;
-    public $wallet;
-    public $token;
-    public $currentBalance;
-    public $lastRefreshed;
+    
+    /**
+     * Constructor
+     *
+     * @param array $params
+     */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
@@ -22,6 +37,19 @@ class Wallet extends JuspayEntity {
             }
         }
     }
+    
+    /**
+     *
+     * @param string $customerId
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return WalletList
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function listAll($customerId, $requestOptions = null) {
         if ($customerId == null || $customerId == "") {
             throw new InvalidRequestException ();
@@ -29,6 +57,19 @@ class Wallet extends JuspayEntity {
         $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", null, RequestMethod::GET, $requestOptions );
         return new WalletList ( $response );
     }
+    
+    /**
+     *
+     * @param string $customerId
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return WalletList
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
     public static function refresh($customerId, $requestOptions = null) {
         if ($customerId == null || $customerId == "") {
             throw new InvalidRequestException ();

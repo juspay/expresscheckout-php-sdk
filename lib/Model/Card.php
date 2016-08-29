@@ -2,26 +2,42 @@
 
 namespace Juspay\Model;
 
-use Juspay\RequestMethod;
+use Juspay\Exception\APIConnectionException;
+use Juspay\Exception\APIException;
+use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
+/**
+ * Class Card
+ *
+ * @property string $cardNumber
+ * @property string $nameOnCard
+ * @property string $cardExpYear
+ * @property string $cardExpMonth
+ * @property string $cardSecurityCode
+ * @property string $nickname
+ * @property string $cardToken
+ * @property string $cardReference
+ * @property string $cardFingerprint
+ * @property string $cardIsin
+ * @property string $lastFourDigits
+ * @property string $cardType
+ * @property string $cardIssuer
+ * @property bool $savedToLocker
+ * @property bool $expired
+ * @property string $cardBrand
+ *
+ * @package Juspay\Model
+ */
 class Card extends JuspayEntity {
-    public $cardNumber;
-    public $nameOnCard;
-    public $cardExpYear;
-    public $cardExpMonth;
-    public $cardSecurityCode;
-    public $nickname;
-    public $cardToken;
-    public $cardReference;
-    public $cardFingerprint;
-    public $cardIsin;
-    public $lastFourDigits;
-    public $cardType;
-    public $cardIssuer;
-    public $savedToLocker;
-    public $expired;
-    public $cardBrand;
+    
+    /**
+     * Constructor
+     *
+     * @param array $params
+     */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
@@ -30,14 +46,16 @@ class Card extends JuspayEntity {
     }
     
     /**
-     * *
-     * Save a card and add it to the Juspay card locker.
-     * Note that a locker needs to be enabled for a merchant account for a card to be saved.
      *
-     * @param
-     *            $params
-     * @return array|mixed
-     * @throws \InvalidArgumentException
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Card
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
      */
     public static function create($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
@@ -48,12 +66,16 @@ class Card extends JuspayEntity {
     }
     
     /**
-     * *
-     * Lists all saved cards for a given customer.
      *
-     * @param
-     *            $customer_id
-     * @return array|mixed
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return array
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
      */
     public static function listAll($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
@@ -71,12 +93,16 @@ class Card extends JuspayEntity {
     }
     
     /**
-     * *
-     * Delete a saved card given the card token.
      *
-     * @param
-     *            $card_token
-     * @return array|mixed
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return bool
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
      */
     public static function delete($params, $requestOptions = null) {
         if ($params == null || count ( $params ) == 0) {
