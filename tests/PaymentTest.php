@@ -25,4 +25,4 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
         assert ( $payment->status == "PENDING_VBV" );
     }
 }
-require_once __DIR__ . '/../init.php';
+require_once __DIR__ . '/TestEnvironment.php';

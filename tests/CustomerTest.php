@@ -55,4 +55,4 @@ class CustomerTest extends \PHPUnit_Framework_TestCase {
         assert ( $customer != null );
     }
 }
-require_once __DIR__ . '/../init.php';
+require_once __DIR__ . '/TestEnvironment.php';

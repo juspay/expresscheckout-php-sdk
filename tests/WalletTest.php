@@ -20,4 +20,4 @@ class WalletTest extends \PHPUnit_Framework_TestCase {
         assert ( $wallets != null );
     }
 }
-require_once __DIR__ . '/../init.php';
+require_once __DIR__ . '/TestEnvironment.php';
