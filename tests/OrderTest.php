@@ -44,8 +44,13 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $params ['shipping_address_country_code_iso'] = "IND";
         $order = Order::create ( $params );
         assert ( $order != null );
+        assert ( $order->id != null );
         assert ( $order->status == "CREATED" );
         assert ( $order->statusId == 1 );
+        assert ($order->paymentLinks != null);
+        assert ($order->paymentLinks->web != null);
+        assert ($order->paymentLinks->mobile != null);
+        assert ($order->paymentLinks->iframe != null);
         $this->order = $order;
     }
     public function testStatus() {

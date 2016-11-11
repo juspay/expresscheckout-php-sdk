@@ -9,7 +9,7 @@ The Juspay ExpressCheckout PHP SDK makes it easier for merchants to integrate th
 #!python
 
 "require" : {
-	"juspay/expresscheckout-php-sdk" : "1.0.1"
+	"juspay/expresscheckout-php-sdk" : "1.0.2"
 }
 
 ```

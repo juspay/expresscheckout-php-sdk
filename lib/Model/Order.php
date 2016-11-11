@@ -43,6 +43,7 @@ use Juspay\RequestMethod;
  * @property string $bankErrorMessage
  * @property Card $card
  * @property PaymentGatewayResponse $paymentGatewayResponse
+ * @property PaymentLinks $paymentLinks
  *
  * @package Juspay\Model
  */
@@ -66,6 +67,8 @@ class Order extends JuspayEntity {
                     $refunds [$i] = new Refund ( $params [$key] [$i] );
                 }
                 $this->$newKey = $refunds;
+            } else if ($newKey == "paymentLinks") {
+                $this->$newKey = new PaymentLinks ( $params [$key] );
             } else {
                 $this->$newKey = $params [$key];
             }
