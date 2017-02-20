@@ -41,6 +41,8 @@ use Juspay\RequestMethod;
  * @property Refund[] $refunds
  * @property string $bankErrorCode
  * @property string $bankErrorMessage
+ * @property string $paymentMethodType
+ * @property string $paymentMethod
  * @property Card $card
  * @property PaymentGatewayResponse $paymentGatewayResponse
  * @property PaymentLinks $paymentLinks

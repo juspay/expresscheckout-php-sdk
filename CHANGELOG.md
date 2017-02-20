@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.3] - 2017-02-09
+### Added
+- Added PaymentMethod and PaymentMethodType in order class.
 
 ## [1.0.2] - 2016-11-11
 ### Added
