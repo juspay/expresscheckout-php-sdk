@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.4] - 2017-02-28
+### Added
+- Added paymentMethod and paymentMethodType in Order class.
+- Added implementation for Wallet create, createAndAuthenticate, authenticate, link & delink.
+- Added implementation for wallet refresh by walletId.
+- Added implementation for PaymentMethod list api.
+
 ## [1.0.3] - 2017-02-09
 ### Added
 - Added PaymentMethod and PaymentMethodType in order class.
