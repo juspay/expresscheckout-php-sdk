@@ -33,47 +33,6 @@ class PaymentMethod extends JuspayEntity {
     
     /**
      *
-     * @param array $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return PaymentMethod
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function create($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
-            throw new InvalidRequestException ();
-        }
-        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::POST, $requestOptions );
-        return new Customer ( $response );
-    }
-    
-    /**
-     *
-     * @param string $id
-     * @param array $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return Customer
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function update($id, $params, $requestOptions = null) {
-        if ($id == null || $id == "" || $params == null || count ( $params ) == 0) {
-            throw new InvalidRequestException ();
-        }
-        $response = self::makeServiceCall ( "/customers/" . $id, $params, RequestMethod::POST, $requestOptions );
-        return new Customer ( $response );
-    }
-    
-    /**
-     *
      * @param string $merchantId
      * @param RequestOptions|null $requestOptions
      *
