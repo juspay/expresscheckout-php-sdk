@@ -62,7 +62,7 @@ class JuspayEnvironment {
             return self::$thisObj;
         } else {
             self::$apiKey = '';
-            self::$apiVersion = '2016-07-19';
+            self::$apiVersion = '2016-10-27';
             self::$baseUrl = JuspayEnvironment::PRODUCTION_BASE_URL;
             self::$connectTimeout = 15;
             self::$readTimeout = 30;
