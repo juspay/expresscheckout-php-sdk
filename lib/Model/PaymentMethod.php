@@ -9,7 +9,7 @@ use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
 
 /**
- * Class Customer
+ * Class PaymentMethod
  *
  * @property string $paymentMethod
  * @property string $paymentMethodType

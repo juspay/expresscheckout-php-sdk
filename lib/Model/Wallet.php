@@ -141,7 +141,7 @@ class Wallet extends JuspayEntity {
         }
         $params = array();
         $params['command'] = 'refresh';
-        $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::GET, $requestOptions );
         return new Wallet ( $response );
     }    
     
