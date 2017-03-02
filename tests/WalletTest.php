@@ -14,8 +14,8 @@ class WalletTest extends \PHPUnit_Framework_TestCase {
             $this->customerTest = new CustomerTest ();
             $this->customerTest->testCreate ();
         }
-        $wallet = Wallet::create ( $this->customerTest->customer->objectReferenceId, "MOBIKWIK" );
-        assert ( $wallet != null );
+        $this->wallet = Wallet::create ( $this->customerTest->customer->objectReferenceId, 'MOBIKWIK' );
+        assert ( $this->wallet != null );
     }
     public function testList() {
         $this->testCreate();

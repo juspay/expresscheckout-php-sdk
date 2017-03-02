@@ -96,7 +96,7 @@ class Wallet extends JuspayEntity {
             throw new InvalidRequestException ();
         }
         $params = array();
-        $params['gateway'] = gateway;
+        $params['gateway'] = $gateway;
         $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
@@ -118,7 +118,7 @@ class Wallet extends JuspayEntity {
             throw new InvalidRequestException ();
         }
         $params = array();
-        $params['gateway'] = gateway;
+        $params['gateway'] = $gateway;
         $params['command'] = 'authenticate';
         $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
