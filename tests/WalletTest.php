@@ -28,21 +28,21 @@ class WalletTest extends \PHPUnit_Framework_TestCase {
     }
     public function testRefreshByWalletId() {
         $this->testCreate ();
-        $wallet = Wallet::refreshByWalletId ( $this->wallet->id );
-        assert ( $wallet != null );
+        $this->wallet = Wallet::refreshByWalletId ( $this->wallet->id );
+        assert ( $this->wallet != null );
     }
     public function testCreateAndAuthenticate() {
         if ($this->customerTest == null) {
             $this->customerTest = new CustomerTest ();
             $this->customerTest->testCreate ();
         }
-        $wallet = Wallet::createAndAuthenticate ( $this->customerTest->customer->objectReferenceId, "MOBIKWIK" );
-        assert ( $wallet != null );
+        $this->wallet = Wallet::createAndAuthenticate ( $this->customerTest->customer->objectReferenceId, "MOBIKWIK" );
+        assert ( $this->wallet != null );
     }
     public function testAuthenticate() {
         $this->testCreate ();
-        $wallet = Wallet::authenticate ( $this->wallet->id );
-        assert ( $wallet != null );
+        $this->wallet = Wallet::authenticate ( $this->wallet->id );
+        assert ( $this->wallet != null );
     }
 }
 require_once __DIR__ . '/TestEnvironment.php';
