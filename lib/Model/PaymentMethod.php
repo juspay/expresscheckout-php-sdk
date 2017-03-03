@@ -22,7 +22,7 @@ class PaymentMethod extends JuspayEntity {
     /**
      * Constructor
      *
-     * @param array $params            
+     * @param array $params
      */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
@@ -33,8 +33,8 @@ class PaymentMethod extends JuspayEntity {
     
     /**
      *
-     * @param string $merchantId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $merchantId
+     * @param RequestOptions|null $requestOptions
      *
      * @return PaymentMethodList
      *

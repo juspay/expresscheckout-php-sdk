@@ -26,7 +26,7 @@ class Wallet extends JuspayEntity {
     /**
      * Constructor
      *
-     * @param array $params            
+     * @param array $params
      */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
@@ -41,8 +41,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $customerId
+     * @param RequestOptions|null $requestOptions
      *
      * @return WalletList
      *
@@ -61,8 +61,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $customerId
+     * @param RequestOptions|null $requestOptions
      *
      * @return WalletList
      *
@@ -81,9 +81,9 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId            
-     * @param string $gateway            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $customerId
+     * @param string $gateway
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
@@ -104,9 +104,9 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId            
-     * @param string $gateway            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $customerId
+     * @param string $gateway
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
@@ -128,8 +128,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $walletId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $walletId
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
@@ -150,8 +150,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $walletId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $walletId
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
@@ -172,9 +172,9 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $walletId            
-     * @param string $otp            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $walletId
+     * @param string $otp
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
@@ -196,8 +196,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $walletId            
-     * @param RequestOptions|null $requestOptions            
+     * @param string $walletId
+     * @param RequestOptions|null $requestOptions
      *
      * @return Wallet
      *
