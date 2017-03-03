@@ -22,19 +22,19 @@ class PaymentMethod extends JuspayEntity {
     /**
      * Constructor
      *
-     * @param array $params
+     * @param array $params            
      */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
-                $this->$newKey = $params [$key];
+            $this->$newKey = $params [$key];
         }
     }
     
     /**
      *
-     * @param string $merchantId
-     * @param RequestOptions|null $requestOptions
+     * @param string $merchantId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return PaymentMethodList
      *
@@ -47,8 +47,15 @@ class PaymentMethod extends JuspayEntity {
         if ($merchantId == null || $merchantId == "") {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/merchants/".$merchantId."/paymentmethods",null, RequestMethod::GET, $requestOptions );
-        return new PaymentMethodList ( $response );
+        $response = self::makeServiceCall ( "/merchants/" . $merchantId . "/paymentmethods", null, RequestMethod::GET, $requestOptions );
+        $paymentMethods = array ();
+        if (array_key_exists ( "payment_methods", $response )) {
+            $paymentMethods = $response ["payment_methods"];
+            for($i = 0; $i < sizeof ( $paymentMethods ); $i ++) {
+                $paymentMethods [$i] = new PaymentMethod( $paymentMethods [$i] );
+            }
+        }
+        return $paymentMethods;
     }
     
 }

@@ -8,9 +8,8 @@ use Juspay\Model\Wallet;
 class WalletTest extends \PHPUnit_Framework_TestCase {
     private $customerTest;
     private $wallet;
-    
     public function testCreate() {
-        if ($this->customerTest == null){
+        if ($this->customerTest == null) {
             $this->customerTest = new CustomerTest ();
             $this->customerTest->testCreate ();
         }
@@ -18,22 +17,22 @@ class WalletTest extends \PHPUnit_Framework_TestCase {
         assert ( $this->wallet != null );
     }
     public function testList() {
-        $this->testCreate();
+        $this->testCreate ();
         $wallets = Wallet::listAll ( $this->customerTest->customer->objectReferenceId );
         assert ( $wallets != null );
     }
     public function testRefresh() {
-        $this->testCreate();
+        $this->testCreate ();
         $wallets = Wallet::refresh ( $this->customerTest->customer->objectReferenceId );
         assert ( $wallets != null );
     }
     public function testRefreshByWalletId() {
-        $this->testCreate();
+        $this->testCreate ();
         $wallet = Wallet::refreshByWalletId ( $this->wallet->id );
         assert ( $wallet != null );
     }
     public function testCreateAndAuthenticate() {
-        if ($this->customerTest == null){
+        if ($this->customerTest == null) {
             $this->customerTest = new CustomerTest ();
             $this->customerTest->testCreate ();
         }
@@ -41,7 +40,7 @@ class WalletTest extends \PHPUnit_Framework_TestCase {
         assert ( $wallet != null );
     }
     public function testAuthenticate() {
-        $this->testCreate();
+        $this->testCreate ();
         $wallet = Wallet::authenticate ( $this->wallet->id );
         assert ( $wallet != null );
     }

@@ -26,7 +26,7 @@ class Wallet extends JuspayEntity {
     /**
      * Constructor
      *
-     * @param array $params
+     * @param array $params            
      */
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
@@ -41,8 +41,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId
-     * @param RequestOptions|null $requestOptions
+     * @param string $customerId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return WalletList
      *
@@ -61,8 +61,8 @@ class Wallet extends JuspayEntity {
     
     /**
      *
-     * @param string $customerId
-     * @param RequestOptions|null $requestOptions
+     * @param string $customerId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return WalletList
      *
@@ -80,9 +80,10 @@ class Wallet extends JuspayEntity {
     }
     
     /**
-     * @param string $customerId
-     * @param string $gateway
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $customerId            
+     * @param string $gateway            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -95,16 +96,17 @@ class Wallet extends JuspayEntity {
         if ($customerId == null || $customerId == "" || $gateway == null || $gateway == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['gateway'] = $gateway;
+        $params = array ();
+        $params ['gateway'] = $gateway;
         $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     
     /**
-     * @param string $customerId
-     * @param string $gateway
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $customerId            
+     * @param string $gateway            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -117,16 +119,17 @@ class Wallet extends JuspayEntity {
         if ($customerId == null || $customerId == "" || $gateway == null || $gateway == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['gateway'] = $gateway;
-        $params['command'] = 'authenticate';
+        $params = array ();
+        $params ['gateway'] = $gateway;
+        $params ['command'] = 'authenticate';
         $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     
     /**
-     * @param string $walletId
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $walletId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -139,15 +142,16 @@ class Wallet extends JuspayEntity {
         if ($walletId == null || $walletId == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['command'] = 'refresh';
+        $params = array ();
+        $params ['command'] = 'refresh';
         $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::GET, $requestOptions );
         return new Wallet ( $response );
-    }    
+    }
     
     /**
-     * @param string $walletId
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $walletId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -160,16 +164,17 @@ class Wallet extends JuspayEntity {
         if ($walletId == null || $walletId == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['command'] = 'authenticate';
+        $params = array ();
+        $params ['command'] = 'authenticate';
         $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
-    }        
-
+    }
+    
     /**
-     * @param string $walletId
-     * @param string $otp
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $walletId            
+     * @param string $otp            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -182,16 +187,17 @@ class Wallet extends JuspayEntity {
         if ($walletId == null || $walletId == "" || $otp == null || $otp == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['command'] = 'link';
-        $params['otp'] = $otp;
+        $params = array ();
+        $params ['command'] = 'link';
+        $params ['otp'] = $otp;
         $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
-    }        
+    }
     
     /**
-     * @param string $walletId
-     * @param RequestOptions|null $requestOptions
+     *
+     * @param string $walletId            
+     * @param RequestOptions|null $requestOptions            
      *
      * @return Wallet
      *
@@ -204,8 +210,8 @@ class Wallet extends JuspayEntity {
         if ($walletId == null || $walletId == "") {
             throw new InvalidRequestException ();
         }
-        $params = array();
-        $params['command'] = 'delink';
+        $params = array ();
+        $params ['command'] = 'delink';
         $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }    
