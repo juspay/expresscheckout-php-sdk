@@ -45,10 +45,13 @@ abstract class JuspayEntity {
         curl_setopt ( $curlObject, CURLOPT_USERAGENT, JuspayEnvironment::getSdkVersion () );
         curl_setopt ( $curlObject, CURLOPT_TIMEOUT, JuspayEnvironment::getReadTimeout () );
         curl_setopt ( $curlObject, CURLOPT_CONNECTTIMEOUT, JuspayEnvironment::getConnectTimeout () );
-        curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, array (
-                'version: ' . JuspayEnvironment::getApiVersion () 
-        ) );
+
+        $headers = array('version: ' . JuspayEnvironment::getApiVersion());
+        
+        
         if ($method == RequestMethod::GET) {
+            curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
+        
             curl_setopt ( $curlObject, CURLOPT_HTTPGET, 1 );
             if ($params != null) {
                 $encodedParams = http_build_query ( $params );
@@ -57,6 +60,10 @@ abstract class JuspayEntity {
                 }
             }
         } else {
+            array_push( $headers, 'Content-Type: application/x-www-form-urlencoded' );
+            
+            curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
+        
             curl_setopt ( $curlObject, CURLOPT_POST, 1 );
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
