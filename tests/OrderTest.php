@@ -81,6 +81,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
         $params ['amount'] = 10;
+        $params['unique_request_id'] = uniqid('php_sdk_test_');
         try {
             // Testing refund needs a successful order.
             // Here we are testing only unsuccessful orders using catch.

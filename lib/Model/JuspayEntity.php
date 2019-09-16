@@ -68,7 +68,7 @@ abstract class JuspayEntity {
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
             } else {
-                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $params );
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, http_build_query($params) );
             }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
