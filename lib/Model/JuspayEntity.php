@@ -115,10 +115,14 @@ abstract class JuspayEntity {
      * @param string $input
      * @param string|null $separator
      *
+     * Node: instead of using 2 argument version of ucwords,
+     * implement the delimiter functionality explicitly to
+     * support older clients
      * @return string
      */
     protected function camelize($input, $separator = '_') {
-        $output = str_replace ( $separator, '', ucwords ( $input, $separator ) );
+        $words = array_map('ucwords', explode($separator, $input));
+        $output = implode('', $words);
         $output [0] = strtolower ( $output [0] );
         return $output;
     }
