@@ -31,7 +31,7 @@ abstract class JuspayEntity {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    protected static function makeServiceCall($path, $params, $method, $requestOptions) {
+    protected static function makeServiceCall($path, $params, $method, $requestOptions, $contentType = null) {
         if ($requestOptions == null) {
             $requestOptions = RequestOptions::createDefault ();
         }
@@ -58,6 +58,17 @@ abstract class JuspayEntity {
                 if ($encodedParams != null && $encodedParams != "") {
                     $url = $url . "?" . $encodedParams;
                 }
+            }
+        } else if ($contentType == 'application/json') {
+            array_push( $headers, 'Content-Type: application/json' );
+            
+            curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
+        
+            curl_setopt ( $curlObject, CURLOPT_POST, 1 );
+            if ($params == null) {
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
+            } else {
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, json_encode($params) );
             }
         } else {
             array_push( $headers, 'Content-Type: application/x-www-form-urlencoded' );
@@ -110,6 +121,24 @@ abstract class JuspayEntity {
         }
     }
     
+    /**
+     * 
+     * @return array
+     */
+    protected static function camelizeArrayKeysRecursive(array $array)
+    {
+        $camelizedArray = [];
+    
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $value = self::camelizeArrayKeysRecursive($value);
+            }
+            $camelizedKey = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
+            $camelizedArray[$camelizedKey] = $value;
+        }
+    
+        return $camelizedArray;
+    }
     /**
      *
      * @param string $input
