@@ -24,7 +24,7 @@ use Juspay\RequestMethod;
  *
  * @package Juspay\Model
  */
-class Customer extends JuspayEntity {
+class Customer extends JuspayResponse {
     
     /**
      * Constructor
@@ -32,21 +32,6 @@ class Customer extends JuspayEntity {
      * @param array $params
      */
 
-    private static $result = [];
-
-    public function __get($name) {
-        return self::$result[$name];
-     }
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "dateCreated" || $newKey == "lastUpdated") {
-                self::$result[$newKey] = date_create ( $params [$key] );
-            } else {
-                self::$result[$newKey] =  $params [$key];
-            }
-        }
-    }
     
     /**
      *

@@ -17,31 +17,11 @@ use Juspay\RequestMethod;
  * @property string $token
  * @property boolean $linked
  * @property float $currentBalance
- * @property DateTime $lastRefreshed
+ * @property string $lastRefreshed
  *
  * @package Juspay\Model
  */
-class Wallet extends JuspayEntity {
-    private static $result = [];
-
-    public function __get($name) {
-        return self::$result[$name];
-    }
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "lastRefreshed") {
-                 self::$result[$newKey] = date_create ( $params [$key] );
-            } else {
-                 self::$result[$newKey] = $params [$key];
-            }
-        }
-    }
+class Wallet extends JuspayResponse {
     
     /**
      *
@@ -170,6 +150,7 @@ class Wallet extends JuspayEntity {
         }
         $params = array ();
         $params ['command'] = 'authenticate';
+        print_r($walletId);
         $response = self::makeServiceCall ( "/wallets/$walletId", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }

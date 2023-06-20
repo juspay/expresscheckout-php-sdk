@@ -31,84 +31,73 @@ use Juspay\RequestOptions;
  *
  * @package Juspay\Model
  */
-class Card extends JuspayEntity {
+class Card extends JuspayResponse {
     
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            $this->$newKey = $params [$key];
-        }
-    }
     
-    /**
-     *
-     * @param array $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return Card
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function create($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
-            throw new InvalidRequestException ();
-        }
-        $response = self::makeServiceCall ( '/card/add', $params, RequestMethod::POST, $requestOptions );
-        return new Card ( $response );
-    }
+    // /**
+    //  *
+    //  * @param array $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return Card
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function create($params, $requestOptions = null) {
+    //     if ($params == null || count ( $params ) == 0) {
+    //         throw new InvalidRequestException ();
+    //     }
+    //     $response = self::makeServiceCall ( '/card/add', $params, RequestMethod::POST, $requestOptions );
+    //     return new Card ( $response );
+    // }
     
-    /**
-     *
-     * @param array $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return array
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function listAll($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
-            throw new InvalidRequestException ();
-        }
-        $response = self::makeServiceCall ( '/cards', $params, RequestMethod::GET, $requestOptions );
-        $cardArray = array ();
-        if (array_key_exists ( "cards", $response )) {
-            $cardArray = $response ["cards"];
-            for($i = 0; $i < sizeof ( $cardArray ); $i ++) {
-                $cardArray [$i] = new Card ( $cardArray [$i] );
-            }
-        }
-        return $cardArray;
-    }
+    // /**
+    //  *
+    //  * @param array $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return array
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function listAll($params, $requestOptions = null) {
+    //     if ($params == null || count ( $params ) == 0) {
+    //         throw new InvalidRequestException ();
+    //     }
+    //     $response = self::makeServiceCall ( '/cards', $params, RequestMethod::GET, $requestOptions );
+    //     $cardArray = array ();
+    //     if (array_key_exists ( "cards", $response )) {
+    //         $cardArray = $response ["cards"];
+    //         for($i = 0; $i < sizeof ( $cardArray ); $i ++) {
+    //             $cardArray [$i] = new Card ( $cardArray [$i] );
+    //         }
+    //     }
+    //     return $cardArray;
+    // }
     
-    /**
-     *
-     * @param array $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return bool
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function delete($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
-            throw new InvalidRequestException ();
-        }
-        $response = self::makeServiceCall ( '/card/delete', $params, RequestMethod::POST, $requestOptions );
-        return $response ["deleted"];
-    }
+    // /**
+    //  *
+    //  * @param array $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return bool
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function delete($params, $requestOptions = null) {
+    //     if ($params == null || count ( $params ) == 0) {
+    //         throw new InvalidRequestException ();
+    //     }
+    //     $response = self::makeServiceCall ( '/card/delete', $params, RequestMethod::POST, $requestOptions );
+    //     return $response ["deleted"];
+    // }
 }

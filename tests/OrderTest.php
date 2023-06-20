@@ -48,9 +48,9 @@ class OrderTest extends TestCase {
         $this->assertTrue ( $order->status == "CREATED" );
         $this->assertTrue ( $order->statusId == 1 );
         $this->assertTrue ($order->paymentLinks != null);
-        $this->assertTrue ($order->paymentLinks->web != null);
-        $this->assertTrue ($order->paymentLinks->mobile != null);
-        $this->assertTrue ($order->paymentLinks->iframe != null);
+        $this->assertTrue ($order->paymentLinks["web"] != null);
+        $this->assertTrue ($order->paymentLinks["mobile"] != null);
+        $this->assertTrue ($order->paymentLinks["iframe"] != null);
         $this->order = $order;
     }
     public function testStatus() {

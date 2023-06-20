@@ -10,24 +10,8 @@ use Juspay\RequestMethod;
 use Juspay\RequestOptions;
 
 
-class Session extends JuspayEntity {
+class Session extends JuspayResponse {
     
-    private static $result = [];
-
-    public function __get($name) {
-        return self::$result[$name];
-    }
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        $params = $this->camelizeArrayKeysRecursive($params);
-        foreach( array_keys($params) as $key) {
-            self::$result[$key] = $params[$key];
-        }
-    }
     
     /**
      *

@@ -17,6 +17,12 @@ use Juspay\RequestOptions;
  */
 abstract class JuspayEntity {
     
+
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     /**
      *
      * @param string $path

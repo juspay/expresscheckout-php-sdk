@@ -17,25 +17,8 @@ use Juspay\RequestMethod;
  *
  * @package Juspay\Model
  */
-class PaymentMethod extends JuspayEntity {
+class PaymentMethod extends JuspayResponse {
     
-    private static $result = [];
-
-    public function __get($name) {
-        return self::$result[$name];
-    }
-
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-             self::$result[$newKey] = $params [$key];
-        }
-    }
     
     /**
      *

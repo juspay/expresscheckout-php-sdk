@@ -38,18 +38,14 @@ use Juspay\RequestMethod;
  * @property int $statusId
  * @property bool $refunded
  * @property float $amountRefunded
- * @property Refund[] $refunds
  * @property string $bankErrorCode
  * @property string $bankErrorMessage
  * @property string $paymentMethodType
  * @property string $paymentMethod
- * @property Card $card
- * @property PaymentGatewayResponse $paymentGatewayResponse
- * @property PaymentLinks $paymentLinks
  *
  * @package Juspay\Model
  */
-class Order extends JuspayEntity {
+class Order extends JuspayResponse {
     
     /**
      * Constructor
@@ -57,33 +53,8 @@ class Order extends JuspayEntity {
      * @param array $params
      */
 
-    private static $result = [];
 
-    public function __get($name) {
-        return self::$result[$name];
-     }
-
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "card") {
-                self::$result[$newKey] = new Card ( $params [$key] );
-            } else if ($newKey == "paymentGatewayResponse") {
-                self::$result[$newKey] = new PaymentGatewayResponse ( $params [$key] );
-            } else if ($newKey == "refunds") {
-                $refunds = array ();
-                for($i = 0; $i < count ( $params [$key] ); $i ++) {
-                    $refunds [$i] = new Refund ( $params [$key] [$i] );
-                }
-                 self::$result[$newKey] = $refunds;
-            } else if ($newKey == "paymentLinks") {
-                 self::$result[$newKey] = new PaymentLinks ( $params [$key] );
-            } else {
-                 self::$result[$newKey] = $params [$key];
-            }
-        }
-    }
-    
+   
     /**
      *
      * @param array $params

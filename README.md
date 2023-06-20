@@ -87,3 +87,16 @@ $params ['nickname'] = "ICICI VISA";
 $card = Card::create ( $params );
 
 ```
+
+## To Run Test
+### PHP Version <= 7.2
+```shell
+composer install --dev
+./vendor/bin/phpunit tests -c ./phpunit-config-php7.xml
+```
+### PHP Version > 7.2
+```shell
+composer install --dev
+./vendor/bin/phpunit tests -c ./phpunit-config-php8.xml
+```
+*Note:* Wallet test for authentication might fail due to OTP request limit
