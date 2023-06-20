@@ -81,7 +81,7 @@ class Card extends JuspayEntity {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( '/card/list', $params, RequestMethod::GET, $requestOptions );
+        $response = self::makeServiceCall ( '/cards', $params, RequestMethod::GET, $requestOptions );
         $cardArray = array ();
         if (array_key_exists ( "cards", $response )) {
             $cardArray = $response ["cards"];

@@ -13,7 +13,13 @@ namespace Juspay\Model;
  * @package Juspay\Model
  */
 abstract class JuspayEntityList {
-    
+
+    public $list = [];
+    public $count;
+
+    public $offset;
+
+    public $total;
     /**
      * Constructor
      *

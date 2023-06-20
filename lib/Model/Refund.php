@@ -16,6 +16,11 @@ namespace Juspay\Model;
  */
 class Refund extends JuspayEntity {
     
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     /**
      * Constructor
      *
@@ -25,9 +30,9 @@ class Refund extends JuspayEntity {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
             if ($newKey == "created") {
-                $this->$newKey = date_create ( $params [$key] );
+                 self::$result[$newKey] = date_create ( $params [$key] );
             } else {
-                $this->$newKey = $params [$key];
+                 self::$result[$newKey] = $params [$key];
             }
         }
     }

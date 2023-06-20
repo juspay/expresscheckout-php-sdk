@@ -56,23 +56,30 @@ class Order extends JuspayEntity {
      *
      * @param array $params
      */
+
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+     }
+
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
             if ($newKey == "card") {
-                $this->$newKey = new Card ( $params [$key] );
+                self::$result[$newKey] = new Card ( $params [$key] );
             } else if ($newKey == "paymentGatewayResponse") {
-                $this->$newKey = new PaymentGatewayResponse ( $params [$key] );
+                self::$result[$newKey] = new PaymentGatewayResponse ( $params [$key] );
             } else if ($newKey == "refunds") {
                 $refunds = array ();
                 for($i = 0; $i < count ( $params [$key] ); $i ++) {
                     $refunds [$i] = new Refund ( $params [$key] [$i] );
                 }
-                $this->$newKey = $refunds;
+                 self::$result[$newKey] = $refunds;
             } else if ($newKey == "paymentLinks") {
-                $this->$newKey = new PaymentLinks ( $params [$key] );
+                 self::$result[$newKey] = new PaymentLinks ( $params [$key] );
             } else {
-                $this->$newKey = $params [$key];
+                 self::$result[$newKey] = $params [$key];
             }
         }
     }
@@ -132,30 +139,30 @@ class Order extends JuspayEntity {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    public static function update($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
+    public static function update($params, $orderId, $requestOptions = null) {
+        if ($params == null || count ( $params ) == 0 || $orderId == null) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/order/update", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/orders/$orderId", $params, RequestMethod::POST, $requestOptions );
         return new Order ( $response );
     }
     
-    /**
-     *
-     * @param array|null $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return OrderList
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function listAll($params, $requestOptions = null) {
-        $response = self::makeServiceCall ( "/order/list", $params, RequestMethod::GET, $requestOptions );
-        return new OrderList ( $response );
-    }
+    // /**
+    //  *
+    //  * @param array|null $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return OrderList
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function listAll($params, $requestOptions = null) {
+    //     $response = self::makeServiceCall ( "/order/list", $params, RequestMethod::GET, $requestOptions );
+    //     return new OrderList ( $response );
+    // }
     
     /**
      *

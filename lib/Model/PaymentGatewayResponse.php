@@ -22,13 +22,19 @@ class PaymentGatewayResponse extends JuspayEntity {
      *
      * @param array $params
      */
+
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
             if ($newKey == "created") {
-                $this->$newKey = date_create ( $params [$key] );
+                 self::$result[$newKey] = date_create ( $params [$key] );
             } else {
-                $this->$newKey = $params [$key];
+                 self::$result[$newKey] = $params [$key];
             }
         }
     }

@@ -18,10 +18,15 @@ class PaymentLinks extends JuspayEntity {
      *
      * @param array $params
      */
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
-            $this->$newKey = $params [$key];
+             self::$result[$newKey] = $params [$key];
         }
     }
 }

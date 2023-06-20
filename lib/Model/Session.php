@@ -12,6 +12,11 @@ use Juspay\RequestOptions;
 
 class Session extends JuspayEntity {
     
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     /**
      * Constructor
      *
@@ -20,7 +25,7 @@ class Session extends JuspayEntity {
     public function __construct($params) {
         $params = $this->camelizeArrayKeysRecursive($params);
         foreach( array_keys($params) as $key) {
-            $this->$key = $params[$key];
+            self::$result[$key] = $params[$key];
         }
     }
     

@@ -4,11 +4,17 @@ namespace Juspay\Test;
 
 use Juspay\Model\Card;
 
-class CardTest extends \PHPUnit_Framework_TestCase {
+class CardTest extends TestCase {
+    private $customerTest;
+
     private $customerId;
     private $card;
     public function testCreate() {
-        $this->customerId = uniqid ();
+        if ($this->customerTest == null) {
+            $this->customerTest = new CustomerTest();
+            $this->customerTest->testCreate();
+            $this->customerId = $this->customerTest->customer->id;
+        }
         $params = array ();
         $params ['merchant_id'] = TestEnvironment::$merchantId;
         $params ['customer_id'] = $this->customerId;
@@ -28,7 +34,7 @@ class CardTest extends \PHPUnit_Framework_TestCase {
     public function testList() {
         $this->testCreate ();
         $params = array (
-                "customer_id" => $this->customerId 
+                "customer_id" => $this->customerId,
         );
         $cards = Card::listAll ( $params );
         assert ( $cards != null );

@@ -22,7 +22,11 @@ use Juspay\RequestMethod;
  * @package Juspay\Model
  */
 class Wallet extends JuspayEntity {
-    
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     /**
      * Constructor
      *
@@ -32,9 +36,9 @@ class Wallet extends JuspayEntity {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
             if ($newKey == "lastRefreshed") {
-                $this->$newKey = date_create ( $params [$key] );
+                 self::$result[$newKey] = date_create ( $params [$key] );
             } else {
-                $this->$newKey = $params [$key];
+                 self::$result[$newKey] = $params [$key];
             }
         }
     }
@@ -122,7 +126,7 @@ class Wallet extends JuspayEntity {
         $params = array ();
         $params ['gateway'] = $gateway;
         $params ['command'] = 'authenticate';
-        $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/customers/$customerId/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     
@@ -166,7 +170,7 @@ class Wallet extends JuspayEntity {
         }
         $params = array ();
         $params ['command'] = 'authenticate';
-        $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/wallets/$walletId", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     

@@ -8,7 +8,7 @@ namespace Juspay\Model;
  * @package Juspay\Model
  */
 class CustomerList extends JuspayEntityList {
-    
+
     /**
      * Constructor
      *

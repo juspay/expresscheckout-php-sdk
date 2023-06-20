@@ -31,13 +31,19 @@ class Customer extends JuspayEntity {
      *
      * @param array $params
      */
+
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+     }
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
             if ($newKey == "dateCreated" || $newKey == "lastUpdated") {
-                $this->$newKey = date_create ( $params [$key] );
+                self::$result[$newKey] = date_create ( $params [$key] );
             } else {
-                $this->$newKey = $params [$key];
+                self::$result[$newKey] =  $params [$key];
             }
         }
     }
@@ -83,22 +89,22 @@ class Customer extends JuspayEntity {
         return new Customer ( $response );
     }
     
-    /**
-     *
-     * @param array|null $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return CustomerList
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function listAll($params, $requestOptions = null) {
-        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::GET, $requestOptions );
-        return new CustomerList ( $response );
-    }
+    // /**
+    //  *
+    //  * @param array|null $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return CustomerList
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function listAll($params, $requestOptions = null) {
+    //     $response = self::makeServiceCall ( "/customers", $params, RequestMethod::GET, $requestOptions );
+    //     return new CustomerList ( $response );
+    // }
     
     /**
      *

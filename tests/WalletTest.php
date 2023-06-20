@@ -5,7 +5,7 @@ namespace Juspay\Test;
 use Juspay\Model\Customer;
 use Juspay\Model\Wallet;
 
-class WalletTest extends \PHPUnit_Framework_TestCase {
+class WalletTest extends TestCase {
     private $customerTest;
     private $wallet;
     public function testCreate() {

@@ -19,6 +19,12 @@ use Juspay\RequestMethod;
  */
 class PaymentMethod extends JuspayEntity {
     
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
+
     /**
      * Constructor
      *
@@ -27,7 +33,7 @@ class PaymentMethod extends JuspayEntity {
     public function __construct($params) {
         foreach ( array_keys ( $params ) as $key ) {
             $newKey = $this->camelize ( $key );
-            $this->$newKey = $params [$key];
+             self::$result[$newKey] = $params [$key];
         }
     }
     
