@@ -150,7 +150,6 @@ class Wallet extends JuspayResponse {
         }
         $params = array ();
         $params ['command'] = 'authenticate';
-        print_r($walletId);
         $response = self::makeServiceCall ( "/wallets/$walletId", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
