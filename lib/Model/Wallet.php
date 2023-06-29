@@ -7,7 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
-
+use Juspay\RequestOptions;
 /**
  * Class Wallet
  *

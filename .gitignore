@@ -2,3 +2,6 @@
 .buildpath
 .project
 .settings/
+*.pem
+*.cache
+*.lock

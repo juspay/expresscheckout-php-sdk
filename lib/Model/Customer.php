@@ -7,6 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
 /**
  * Class Customer
@@ -49,7 +50,7 @@ class Customer extends JuspayResponse {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::POST, $requestOptions);
         return new Customer ( $response );
     }
     

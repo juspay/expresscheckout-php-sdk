@@ -4,7 +4,6 @@ namespace Juspay\Test;
 
 use Juspay\Model\Customer;
 
-
 class CustomerTest extends TestCase {
     public $customer;
     public function testCreate() {
@@ -15,7 +14,7 @@ class CustomerTest extends TestCase {
         $params ['mobile_country_code'] = "91";
         $params ['mobile_number'] = "9988776655";
         $params ['email_address'] = "support@juspay.in";
-        $params ['object_reference_id'] = $customerId;
+        $params ['object_reference_id'] = $customerId; 
         $customer = Customer::create ( $params );
         $this->assertTrue( $customer != null );
         $this->assertTrue( $customer->id != null );

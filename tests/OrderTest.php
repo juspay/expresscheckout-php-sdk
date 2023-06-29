@@ -2,9 +2,11 @@
 
 namespace Juspay\Test;
 
+use Juspay\Model\JuspayJWT;
 use Juspay\Model\Order;
 use Juspay\Model\OrderList;
 use Juspay\Exception\JuspayException;
+use Juspay\RequestOptions;
 
 class OrderTest extends TestCase {
     public $order;
@@ -58,6 +60,19 @@ class OrderTest extends TestCase {
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
         $order = Order::status ( $params );
+        $this->assertTrue( $order != null );
+        $this->assertTrue( $this->order->orderId == $order->orderId );
+    }
+
+    public function testEncryptedOrderStatus() {
+        echo "encrypted test" . PHP_EOL;
+        $this->testCreate();
+        $params = array ();
+        $params ['order_id'] = $this->order->orderId;
+        $keys = [];
+        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        $order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
         $this->assertTrue( $order != null );
         $this->assertTrue( $this->order->orderId == $order->orderId );
     }

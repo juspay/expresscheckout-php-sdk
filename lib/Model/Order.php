@@ -7,6 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
 /**
  * Class Order
@@ -172,6 +173,25 @@ class Order extends JuspayResponse {
             unset ( $card ["expiry_year"] );
         }
         return $response;
+    }
+
+     /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
+    public static function encryptedOrderStatus($params, $requestOptions = null)
+    {
+        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json');
+        return new Order($response);
     }
 }
 
