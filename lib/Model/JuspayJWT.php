@@ -3,14 +3,28 @@ namespace Juspay\Model;
 
 class JuspayJWT extends IJuspayJWT {
 
-    public function __construct(array $keys,  string $publicKeyKid, string $privateKeyKid) {
+    /**
+     * Prepare the payload.
+     *
+     * @param array $keys Private and Public key array ["publicKey"] ["privateKey"]
+     * @param string $publicKeyKid Public Key Key id
+     * @param string $privateKeyKid Private Key key id
+     */
+    public function __construct(array $keys, $publicKeyKid, $privateKeyKid) {
         $this->keys = $keys;
         $this->publicKeyKid = $publicKeyKid;
         $this->privateKeyKid = $privateKeyKid;
     }
     public $privateKeyKid;
     public $publicKeyKid;
-    public function preparePayload(string $payload) : string {
+
+    /**
+     * Prepare the payload.
+     *
+     * @param string $payload The payload to prepare.
+     * @return string The prepared payload.
+     */
+    public function preparePayload($payload) {
         $signedPayload = $this->Sign->sign($this->keys["privateKey"], $payload);
         $signedPayload = explode(".", $signedPayload);
         $signedPayload = "{\"header\":\"{$signedPayload[0]}\",\"payload\":\"{$signedPayload[1]}\",\"signature\":\"{$signedPayload[2]}\"}";
@@ -20,15 +34,30 @@ class JuspayJWT extends IJuspayJWT {
         return $encryptedPayload;
     }
 
-    public function consumePayload(string $encryptedPayload) : string {
+    /**
+     * Consume payload
+     * @param string $encryptedPayload Encrypted payload
+     * @return string Returns the decrypted string
+     */
+
+    public function consumePayload($encryptedPayload) {
         $encryptedPayload = json_decode($encryptedPayload, true);
         $signedPayload = $this->Enc->decrypt($this->keys["privateKey"], "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}");
         return $this->Sign->verifySign($this->keys["publicKey"], "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
     }
 
-    public function Initialize() : void { // Factory Method
-        $this->Sign = new SignRSA($this->publicKeyKid);
-        $this->Enc = new EncRSAOEAP($this->privateKeyKid);
+    /**
+     * Initialize Signer and Encrypter
+     * @return void
+     */
+    public function Initialize() { // Factory Method
+        if (version_compare(phpversion(), "7.1.0", ">=")) {
+            $this->Sign = new SignRSA($this->publicKeyKid);
+            $this->Enc = new EncRSAOEAP($this->privateKeyKid);
+        } else {
+            $this->Sign = new SignRSA5($this->publicKeyKid);
+            $this->Enc = new EncRSAOEAP5($this->privateKeyKid);
+        }
     }
 }
 ?>

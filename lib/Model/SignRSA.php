@@ -14,10 +14,21 @@ use Jose\Component\Signature\Serializer\JWSSerializerManager;
 class SignRSA extends ISign {
 
     public $kid;
+    /**
+    * 
+    * @param string $kid private key key id
+    */
     public function __construct(string $kid) {
         $this->kid = $kid;
     }
-    public function sign(string $privateKey, string $payload) : string {
+
+     /**
+     * Signer
+     * @param string $privateKey Key used to sing
+     * @param string $payload Payload to be signed
+     * @return string Returns signed string
+     */
+    public function sign($privateKey, $payload) {
         $privateJWKKey = JWKFactory::createFromKey($privateKey);
         if (version_compare(phpversion(), '7.2.0', '>=')) {
             echo "here" . PHP_EOL;
@@ -39,7 +50,14 @@ class SignRSA extends ISign {
 
         return $serializer->serialize($jws, 0); 
     }
-    public function verifySign(string $publicKey, string $signedPayload) : string {
+
+    /**
+     * Verify the Signature and return decoded payload
+     * @param string $publicKey Key used to verify the signature
+     * @param string $signedPayload Payload to be verified and decoded
+     * @return string Decoded payload
+     */
+    public function verifySign($publicKey, $signedPayload) {
         $publicJWKKey = JWKFactory::createFromKey($publicKey);
         $jwsVerifier = new JWSVerifier(
             new AlgorithmManager([new RS256()])

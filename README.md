@@ -89,14 +89,20 @@ $card = Card::create ( $params );
 ```
 
 ## To Run Test
-### PHP Version <= 7.2
+
+### PHP Version >=7.1 and <= 7.2
 ```shell
-composer install --dev
+COMPOSER=composer5.json composer install --dev
 ./vendor/bin/phpunit tests -c ./phpunit-config-php7.xml
 ```
 ### PHP Version > 7.2
 ```shell
 composer install --dev
 ./vendor/bin/phpunit tests -c ./phpunit-config-php8.xml
+```
+### PHP Version 5
+```shell
+COMPOSER=composer5.json composer install --dev
+./vendor/bin/phpunit tests -c ./phpunit-config-php7.xml
 ```
 *Note:* Wallet test for authentication might fail due to OTP request limit

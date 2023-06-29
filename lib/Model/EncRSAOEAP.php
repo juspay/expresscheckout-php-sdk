@@ -19,10 +19,21 @@ use Jose\Component\KeyManagement\JWKFactory;
 class EncRSAOEAP extends IEnc {
 
     public $kid;
-    public function __construct(string $kid) {
+    /**
+    * 
+    * @param string $kid private key key id
+    */
+    public function __construct($kid) {
         $this->kid = $kid;
     }
-    public function encrypt(string $publicKey, string $payload) : string {
+
+     /**
+     * Encrypt the payload
+     * @param string $publicKey Key used to encrypt the payload/encrypt the encryption key
+     * @param string $payload Payload to be encrypted
+     * @return string Encrypted payload
+     */
+    public function encrypt($publicKey, $payload) {
         $publicJWKKey = JWKFactory::createFromKey($publicKey);
         if (version_compare(phpversion(), '7.2.0', '>=')) {
             $jweBuilder = new JWEBuilder(
@@ -52,7 +63,13 @@ class EncRSAOEAP extends IEnc {
         
     }
 
-    public function decrypt(string $privateKey, string $encryptedPayload) : string {
+    /**
+     * Decrypt the encrypted payload
+     * @param string $privateKey Key used to decrypt the payload/decrypt the encryption key
+     * @param string $encryptedPayload Payload to be decrypted
+     * @return string Encrypted payload
+     */
+    public function decrypt($privateKey, $encryptedPayload) {
         $privateJWKKey = JWKFactory::createFromKey($privateKey);
         $serializerManager = new JWESerializerManager([
             new CompactSerializer(),
