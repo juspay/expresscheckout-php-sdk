@@ -2,6 +2,10 @@
 namespace Juspay\Model;
 
 abstract class IJuspayJWT {
+     /**
+     *
+     * @property array $keys
+     */
     public $keys;
 
     /**
@@ -23,8 +27,17 @@ abstract class IJuspayJWT {
      * @return void
      */
     abstract public function Initialize();
+
+    /**
+     *
+     * @property ISign $Sign
+     */
     public $Sign;
 
+    /**
+     *
+     * @property IEnc $Enc
+     */
     public $Enc;
 
 }

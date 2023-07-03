@@ -22,9 +22,7 @@ By default SDK is initialised for Juspay production account.
 
 **To setup PHP SDK for production account with default timeouts, use following code:**
 
-```
-#!python
-
+```php
 JuspayEnvironment::init()
 ->withApiKey("your_api_key")
 
@@ -33,9 +31,7 @@ JuspayEnvironment::init()
 
 **To setup PHP SDK for sandbox account with default timeouts, use following code:**
 
-```
-#!python
-
+```php
 JuspayEnvironment::init()
 ->withApiKey("yourApiKey")
 ->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
@@ -44,9 +40,7 @@ JuspayEnvironment::init()
 
 **To setup PHP SDK for production account with custom timeouts, use following code:**
 
-```
-#!python
-
+```php
 JuspayEnvironment::init()
 ->withApiKey("yourApiKey")
 ->withConnectTimeout(connectTimeout)
@@ -56,9 +50,7 @@ JuspayEnvironment::init()
 
 **To setup PHP SDK for sandbox account with custom timeouts, use following code:**
 
-```
-#!python
-
+```php
 JuspayEnvironment::init()
 ->withApiKey("yourApiKey")
 ->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
@@ -72,9 +64,7 @@ The input to all methods in SDK is an associative array and most of the methods 
 ### Example: ###
 **Adding a card to Juspay Locker:**
 
-```
-#!php
-
+```php
 $params = array ();
 $params ['merchant_id'] = "merchantId";
 $params ['customer_id'] = "customerId";
@@ -86,6 +76,19 @@ $params ['name_on_card'] = "Juspay Technologies";
 $params ['nickname'] = "ICICI VISA";
 $card = Card::create ( $params );
 
+```
+
+**Getting order status using encrypting the request and decrypting the response**
+
+Pass JuspayJWT in request option. JuspayJWT implements IJuspayJWT interface. IJuspayJWT has three methods consumePayload, preparePayload and Initialize (a factory method to initialize ISign and IEnc objects) along with three attributes array of keys, Sign of type ISign and Enc of type IEnc. JuspayJWT currently uses SignRSA5 which is a implementation of ISign interface and EncRSAOEAP which is a implementation of IEnc interface. Currently JuspayJWT class comes with the SDK. Implement IJuspayJWT to create custom JWT classes. JuspayJWT constructor accepts $keys and two kid as arguments.
+
+```php
+$params = array ();
+$params ['order_id'] = $this->order->orderId;
+$keys = [];
+$keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+$keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+$order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
 ```
 
 ## To Run Test
