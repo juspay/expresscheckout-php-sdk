@@ -29,7 +29,7 @@ class Session extends JuspayResponse {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/session", $params, RequestMethod::POST, $requestOptions, "application/json");
+        $response = self::makeServiceCall ( "/session", $params, RequestMethod::POST, $requestOptions, "application/json", true);
         return new Session ( $response );
     }
 }

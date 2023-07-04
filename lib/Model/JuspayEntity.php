@@ -29,7 +29,8 @@ abstract class JuspayEntity {
      * @param array|null $params
      * @param string $method
      * @param RequestOptions|null $requestOptions
-     *
+     * @param string $contentType
+     * @param bool $isJwtSupported
      * @return array
      *
      * @throws APIConnectionException
@@ -37,7 +38,7 @@ abstract class JuspayEntity {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    protected static function makeServiceCall($path, $params, $method, $requestOptions, $contentType = null) {
+    protected static function makeServiceCall($path, $params, $method, $requestOptions, $contentType = null, $isJwtSupported = false) {
         if ($requestOptions == null) {
             $requestOptions = RequestOptions::createDefault ();
         }
@@ -75,7 +76,7 @@ abstract class JuspayEntity {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
             } else {
                 echo "came here" . PHP_EOL; 
-                if ($requestOptions != null && isset($requestOptions->JuspayJWT)) {
+                if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
                     $requestOptions->JuspayJWT->Initialize();
                     print_r(json_encode($params));
                     echo PHP_EOL;
@@ -107,7 +108,7 @@ abstract class JuspayEntity {
             $responseBody = json_decode ( substr ( $response, $headerSize ), true );
             curl_close ( $curlObject );
             if ($responseCode >= 200 && $responseCode < 300) {
-                if ($requestOptions != null && isset($requestOptions->JuspayJWT)) {
+                if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
                     $responseBody = $requestOptions->JuspayJWT->consumePayload($responseBody);
                 }
                 return $responseBody;

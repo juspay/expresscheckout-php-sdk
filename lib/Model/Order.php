@@ -190,7 +190,7 @@ class Order extends JuspayResponse {
     public static function encryptedOrderStatus($params, $requestOptions = null)
     {
         if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
-        $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json');
+        $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
         return new Order($response);
     }
 }

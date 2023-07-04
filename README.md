@@ -78,7 +78,7 @@ $card = Card::create ( $params );
 
 ```
 
-**Getting order status using encrypting the request and decrypting the response**
+**Getting order status using JWT**
 
 Pass JuspayJWT in request option. JuspayJWT implements IJuspayJWT interface. IJuspayJWT has three methods consumePayload, preparePayload and Initialize (a factory method to initialize ISign and IEnc objects) along with three attributes array of keys, Sign of type ISign and Enc of type IEnc. JuspayJWT currently uses SignRSA5 which is a implementation of ISign interface and EncRSAOEAP which is a implementation of IEnc interface. Currently JuspayJWT class comes with the SDK. Implement IJuspayJWT to create custom JWT classes. JuspayJWT constructor accepts $keys and two kid as arguments.
 
