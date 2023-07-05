@@ -65,7 +65,6 @@ class OrderTest extends TestCase {
     }
 
     public function testEncryptedOrderStatus() {
-        echo "encrypted test" . PHP_EOL;
         $this->testCreate();
         $params = array ();
         $params ['order_id'] = $this->order->orderId;

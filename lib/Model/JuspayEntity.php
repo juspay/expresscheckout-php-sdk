@@ -75,12 +75,8 @@ abstract class JuspayEntity {
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
             } else {
-                echo "came here" . PHP_EOL; 
                 if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
                     $requestOptions->JuspayJWT->Initialize();
-                    print_r(json_encode($params));
-                    echo PHP_EOL;
-                    print_r($requestOptions->JuspayJWT->preparePayload(json_encode($params)));
                     curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $requestOptions->JuspayJWT->preparePayload(json_encode($params)));
                 } else { 
                     curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, json_encode($params) );
@@ -109,7 +105,7 @@ abstract class JuspayEntity {
             curl_close ( $curlObject );
             if ($responseCode >= 200 && $responseCode < 300) {
                 if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
-                    $responseBody = $requestOptions->JuspayJWT->consumePayload($responseBody);
+                    $responseBody = json_decode($requestOptions->JuspayJWT->consumePayload(substr ( $response, $headerSize )), true);
                 }
                 return $responseBody;
             } else {

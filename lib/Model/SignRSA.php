@@ -31,7 +31,6 @@ class SignRSA extends ISign {
     public function sign($privateKey, $payload) {
         $privateJWKKey = JWKFactory::createFromKey($privateKey);
         if (version_compare(phpversion(), '7.2.0', '>=')) {
-            echo "here" . PHP_EOL;
             $jwsBuilder = new JWSBuilder(
                 new AlgorithmManager([new RS256()])
             );

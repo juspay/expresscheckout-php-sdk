@@ -42,7 +42,7 @@ class JuspayJWT extends IJuspayJWT {
 
     public function consumePayload($encryptedPayload) {
         $encryptedPayload = json_decode($encryptedPayload, true);
-        $signedPayload = $this->Enc->decrypt($this->keys["privateKey"], "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}");
+        $signedPayload = json_decode($this->Enc->decrypt($this->keys["privateKey"], "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}"), true);
         return $this->Sign->verifySign($this->keys["publicKey"], "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
     }
 
