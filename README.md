@@ -95,7 +95,7 @@ $order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($
 
 ### PHP Version >=7.1 and <= 7.2
 ```shell
-COMPOSER=composer5.json composer install --dev
+composer install --dev
 ./vendor/bin/phpunit tests -c ./phpunit-config-php7.xml
 ```
 ### PHP Version > 7.2

@@ -44,7 +44,7 @@ class EncRSAOEAP5 extends IEnc {
             ['RSA-OAEP-256'],
             ['A256GCM']
         );
-        return $decryptedJWE->getPayload();
+        return json_encode($decryptedJWE->getPayload());
     }
 }
 ?>

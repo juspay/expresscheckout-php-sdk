@@ -38,7 +38,7 @@ class SignRSA5 extends ISign {
         $publicJWKKey = JWKFactory::createFromKey($publicKey);
         $loader = new Loader();
         $jwsDecoded = $loader->loadAndVerifySignatureUsingKey($signedPayload, $publicJWKKey, ['RS256']);
-        return $jwsDecoded->getPayload();
+        return json_encode($jwsDecoded->getPayload());
     }
 }
 ?>
