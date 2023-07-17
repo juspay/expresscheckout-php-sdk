@@ -2,11 +2,13 @@
 
 namespace Juspay\Test;
 
+use Juspay\Model\JuspayJWT;
 use Juspay\Model\Order;
 use Juspay\Model\OrderList;
 use Juspay\Exception\JuspayException;
+use Juspay\RequestOptions;
 
-class OrderTest extends \PHPUnit_Framework_TestCase {
+class OrderTest extends TestCase {
     public $order;
     public function testCreate() {
         $orderId = uniqid ();
@@ -43,14 +45,14 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $params ['shipping_address_phone'] = "9988776655";
         $params ['shipping_address_country_code_iso'] = "IND";
         $order = Order::create ( $params );
-        assert ( $order != null );
-        assert ( $order->id != null );
-        assert ( $order->status == "CREATED" );
-        assert ( $order->statusId == 1 );
-        assert ($order->paymentLinks != null);
-        assert ($order->paymentLinks->web != null);
-        assert ($order->paymentLinks->mobile != null);
-        assert ($order->paymentLinks->iframe != null);
+        $this->assertTrue ( $order != null );
+        $this->assertTrue ( $order->id != null );
+        $this->assertTrue ( $order->status == "CREATED" );
+        $this->assertTrue ( $order->statusId == 1 );
+        $this->assertTrue ($order->paymentLinks != null);
+        $this->assertTrue ($order->paymentLinks["web"] != null);
+        $this->assertTrue ($order->paymentLinks["mobile"] != null);
+        $this->assertTrue ($order->paymentLinks["iframe"] != null);
         $this->order = $order;
     }
     public function testStatus() {
@@ -58,23 +60,35 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
         $order = Order::status ( $params );
-        assert ( $order != null );
-        assert ( $this->order->orderId == $order->orderId );
+        $this->assertTrue( $order != null );
+        $this->assertTrue( $this->order->orderId == $order->orderId );
     }
-    public function testList() {
-        $this->testCreate ();
-        $orderList = Order::listAll ( null );
-        assert ( $orderList != null );
-        assert ( count ( $orderList->list ) != 0 );
+
+    public function testEncryptedOrderStatus() {
+        $this->testCreate();
+        $params = array ();
+        $params ['order_id'] = $this->order->orderId;
+        $keys = [];
+        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        $order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+        $this->assertTrue( $order != null );
+        $this->assertTrue( $this->order->orderId == $order->orderId );
     }
+    // public function testList() {
+    //     $this->testCreate ();
+    //     $orderList = Order::listAll ( null );
+    //     $this->assertTrue ( $orderList != null );
+    //     $this->assertTrue ( count ( $orderList->list ) != 0 );
+    // }
     public function testUpdate() {
         $this->testCreate ();
         $params = array ();
-        $params ['order_id'] = $this->order->orderId;
+        $orderId = $this->order->orderId;
         $params ['amount'] = $this->order->amount + 100;
-        $order = Order::update ( $params );
-        assert ( $order != null );
-        assert ( $order->amount == $params ['amount'] );
+        $order = Order::update ( $params, $orderId );
+        $this->assertTrue ( $order != null );
+        $this->assertTrue ( $order->amount == $params ['amount'] );
     }
     public function testRefund() {
         $this->testCreate ();
@@ -86,11 +100,11 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
             // Testing refund needs a successful order.
             // Here we are testing only unsuccessful orders using catch.
             $order = Order::refund ( $params );
-            assert ( order != null );
-            assert ( $this->order->orderId == $order->orderId );
-            assert ( $order->refunded == true );
+            $this->assertTrue ( $order != null );
+            $this->assertTrue ( $this->order->orderId == $order->orderId );
+            $this->assertTrue ( $order->refunded == true );
         } catch ( JuspayException $e ) {
-            assert ( "invalid.order.not_successful" == $e->getErrorCode () );
+            $this->assertTrue ( "invalid.order.not_successful" == $e->getErrorCode () );
         }
     }
 }

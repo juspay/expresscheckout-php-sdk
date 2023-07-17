@@ -11,18 +11,7 @@ namespace Juspay\Model;
  *
  * @package Juspay\Model
  */
-class PaymentLinks extends JuspayEntity {
+class PaymentLinks extends JuspayResponse {
 
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            $this->$newKey = $params [$key];
-        }
-    }
 }
 

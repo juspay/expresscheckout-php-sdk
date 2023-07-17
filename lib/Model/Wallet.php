@@ -7,7 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
-
+use Juspay\RequestOptions;
 /**
  * Class Wallet
  *
@@ -17,27 +17,11 @@ use Juspay\RequestMethod;
  * @property string $token
  * @property boolean $linked
  * @property float $currentBalance
- * @property DateTime $lastRefreshed
+ * @property string $lastRefreshed
  *
  * @package Juspay\Model
  */
-class Wallet extends JuspayEntity {
-    
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "lastRefreshed") {
-                $this->$newKey = date_create ( $params [$key] );
-            } else {
-                $this->$newKey = $params [$key];
-            }
-        }
-    }
+class Wallet extends JuspayResponse {
     
     /**
      *
@@ -122,7 +106,7 @@ class Wallet extends JuspayEntity {
         $params = array ();
         $params ['gateway'] = $gateway;
         $params ['command'] = 'authenticate';
-        $response = self::makeServiceCall ( "/customers/" . $customerId . "/wallets", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/customers/$customerId/wallets", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     
@@ -166,7 +150,7 @@ class Wallet extends JuspayEntity {
         }
         $params = array ();
         $params ['command'] = 'authenticate';
-        $response = self::makeServiceCall ( "/wallets/" . $walletId, $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/wallets/$walletId", $params, RequestMethod::POST, $requestOptions );
         return new Wallet ( $response );
     }
     

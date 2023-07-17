@@ -17,13 +17,20 @@ use Juspay\RequestOptions;
  */
 abstract class JuspayEntity {
     
+
+    private static $result = [];
+
+    public function __get($name) {
+        return self::$result[$name];
+    }
     /**
      *
      * @param string $path
      * @param array|null $params
      * @param string $method
      * @param RequestOptions|null $requestOptions
-     *
+     * @param string $contentType
+     * @param bool $isJwtSupported
      * @return array
      *
      * @throws APIConnectionException
@@ -31,7 +38,7 @@ abstract class JuspayEntity {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    protected static function makeServiceCall($path, $params, $method, $requestOptions) {
+    protected static function makeServiceCall($path, $params, $method, $requestOptions, $contentType = null, $isJwtSupported = false) {
         if ($requestOptions == null) {
             $requestOptions = RequestOptions::createDefault ();
         }
@@ -59,6 +66,22 @@ abstract class JuspayEntity {
                     $url = $url . "?" . $encodedParams;
                 }
             }
+        } else if ($contentType == 'application/json') {
+            array_push( $headers, 'Content-Type: application/json' );
+            
+            curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
+        
+            curl_setopt ( $curlObject, CURLOPT_POST, 1 );
+            if ($params == null) {
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
+            } else {
+                if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
+                    $requestOptions->JuspayJWT->Initialize();
+                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $requestOptions->JuspayJWT->preparePayload(json_encode($params)));
+                } else { 
+                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, json_encode($params) );
+                }
+            }
         } else {
             array_push( $headers, 'Content-Type: application/x-www-form-urlencoded' );
             
@@ -81,6 +104,9 @@ abstract class JuspayEntity {
             $responseBody = json_decode ( substr ( $response, $headerSize ), true );
             curl_close ( $curlObject );
             if ($responseCode >= 200 && $responseCode < 300) {
+                if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
+                    $responseBody = json_decode($requestOptions->JuspayJWT->consumePayload(substr ( $response, $headerSize )), true);
+                }
                 return $responseBody;
             } else {
                 $status = null;
@@ -110,6 +136,24 @@ abstract class JuspayEntity {
         }
     }
     
+    /**
+     * 
+     * @return array
+     */
+    protected static function camelizeArrayKeysRecursive(array $array)
+    {
+        $camelizedArray = [];
+    
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $value = self::camelizeArrayKeysRecursive($value);
+            }
+            $camelizedKey = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
+            $camelizedArray[$camelizedKey] = $value;
+        }
+    
+        return $camelizedArray;
+    }
     /**
      *
      * @param string $input

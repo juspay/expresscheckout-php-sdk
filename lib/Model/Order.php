@@ -7,6 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
 /**
  * Class Order
@@ -38,45 +39,23 @@ use Juspay\RequestMethod;
  * @property int $statusId
  * @property bool $refunded
  * @property float $amountRefunded
- * @property Refund[] $refunds
  * @property string $bankErrorCode
  * @property string $bankErrorMessage
  * @property string $paymentMethodType
  * @property string $paymentMethod
- * @property Card $card
- * @property PaymentGatewayResponse $paymentGatewayResponse
- * @property PaymentLinks $paymentLinks
  *
  * @package Juspay\Model
  */
-class Order extends JuspayEntity {
+class Order extends JuspayResponse {
     
     /**
      * Constructor
      *
      * @param array $params
      */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "card") {
-                $this->$newKey = new Card ( $params [$key] );
-            } else if ($newKey == "paymentGatewayResponse") {
-                $this->$newKey = new PaymentGatewayResponse ( $params [$key] );
-            } else if ($newKey == "refunds") {
-                $refunds = array ();
-                for($i = 0; $i < count ( $params [$key] ); $i ++) {
-                    $refunds [$i] = new Refund ( $params [$key] [$i] );
-                }
-                $this->$newKey = $refunds;
-            } else if ($newKey == "paymentLinks") {
-                $this->$newKey = new PaymentLinks ( $params [$key] );
-            } else {
-                $this->$newKey = $params [$key];
-            }
-        }
-    }
-    
+
+
+   
     /**
      *
      * @param array $params
@@ -132,30 +111,30 @@ class Order extends JuspayEntity {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    public static function update($params, $requestOptions = null) {
-        if ($params == null || count ( $params ) == 0) {
+    public static function update($params, $orderId, $requestOptions = null) {
+        if ($params == null || count ( $params ) == 0 || $orderId == null) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/order/update", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/orders/$orderId", $params, RequestMethod::POST, $requestOptions );
         return new Order ( $response );
     }
     
-    /**
-     *
-     * @param array|null $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return OrderList
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function listAll($params, $requestOptions = null) {
-        $response = self::makeServiceCall ( "/order/list", $params, RequestMethod::GET, $requestOptions );
-        return new OrderList ( $response );
-    }
+    // /**
+    //  *
+    //  * @param array|null $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return OrderList
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function listAll($params, $requestOptions = null) {
+    //     $response = self::makeServiceCall ( "/order/list", $params, RequestMethod::GET, $requestOptions );
+    //     return new OrderList ( $response );
+    // }
     
     /**
      *
@@ -194,6 +173,25 @@ class Order extends JuspayEntity {
             unset ( $card ["expiry_year"] );
         }
         return $response;
+    }
+
+     /**
+     *
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
+    public static function encryptedOrderStatus($params, $requestOptions = null)
+    {
+        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
+        return new Order($response);
     }
 }
 

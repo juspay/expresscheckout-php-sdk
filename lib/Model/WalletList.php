@@ -8,7 +8,6 @@ namespace Juspay\Model;
  * @package Juspay\Model
  */
 class WalletList extends JuspayEntityList {
-    
     /**
      * Constructor
      *

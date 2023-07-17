@@ -7,7 +7,7 @@ class InvalidRequestException extends JuspayException {
         if ($httpResponseCode == null) {
             parent::__construct ( 400, "invalid_request", "invalid_request", "Please pass valid arguments." );
         } else {
-            parent::__construct ( $httpResponseCode, $status, $errorCode, $errorMessage );
+            parent::__construct ( $httpResponseCode, $status, $errorCode, $errorMessage || "INVALIDREQUEST EXCEPTION" );
         }
     }
 }

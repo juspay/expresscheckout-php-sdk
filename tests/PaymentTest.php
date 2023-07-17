@@ -4,7 +4,7 @@ namespace Juspay\Test;
 
 use Juspay\Model\Payment;
 
-class PaymentTest extends \PHPUnit_Framework_TestCase {
+class PaymentTest extends TestCase {
     public function testCreate() {
         $orderTest = new OrderTest ();
         $orderTest->testCreate ();

@@ -7,6 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
 /**
  * Class Customer
@@ -24,23 +25,14 @@ use Juspay\RequestMethod;
  *
  * @package Juspay\Model
  */
-class Customer extends JuspayEntity {
+class Customer extends JuspayResponse {
     
     /**
      * Constructor
      *
      * @param array $params
      */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            if ($newKey == "dateCreated" || $newKey == "lastUpdated") {
-                $this->$newKey = date_create ( $params [$key] );
-            } else {
-                $this->$newKey = $params [$key];
-            }
-        }
-    }
+
     
     /**
      *
@@ -58,7 +50,7 @@ class Customer extends JuspayEntity {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::POST, $requestOptions );
+        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::POST, $requestOptions);
         return new Customer ( $response );
     }
     
@@ -83,22 +75,22 @@ class Customer extends JuspayEntity {
         return new Customer ( $response );
     }
     
-    /**
-     *
-     * @param array|null $params
-     * @param RequestOptions|null $requestOptions
-     *
-     * @return CustomerList
-     *
-     * @throws APIConnectionException
-     * @throws APIException
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     */
-    public static function listAll($params, $requestOptions = null) {
-        $response = self::makeServiceCall ( "/customers", $params, RequestMethod::GET, $requestOptions );
-        return new CustomerList ( $response );
-    }
+    // /**
+    //  *
+    //  * @param array|null $params
+    //  * @param RequestOptions|null $requestOptions
+    //  *
+    //  * @return CustomerList
+    //  *
+    //  * @throws APIConnectionException
+    //  * @throws APIException
+    //  * @throws AuthenticationException
+    //  * @throws InvalidRequestException
+    //  */
+    // public static function listAll($params, $requestOptions = null) {
+    //     $response = self::makeServiceCall ( "/customers", $params, RequestMethod::GET, $requestOptions );
+    //     return new CustomerList ( $response );
+    // }
     
     /**
      *

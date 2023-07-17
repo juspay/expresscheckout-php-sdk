@@ -1,6 +1,7 @@
 <?php
 
 namespace Juspay;
+use Juspay\Model\IJuspayJWT;
 
 class RequestOptions {
     
@@ -13,8 +14,9 @@ class RequestOptions {
     /**
      * Constructor
      */
-    private function __construct() {
+    public function __construct(IJuspayJWT $juspayJWT = null) {
         $this->apiKey = JuspayEnvironment::getApiKey ();
+        if ($juspayJWT != null) $this->JuspayJWT = $juspayJWT;
     }
     
     /**
@@ -47,4 +49,6 @@ class RequestOptions {
     public function getApiKey() {
         return $this->apiKey;
     }
+
+    public $JuspayJWT;
 }

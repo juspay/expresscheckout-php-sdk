@@ -7,6 +7,7 @@ use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
 use Juspay\RequestMethod;
+use Juspay\RequestOptions;
 
 /**
  * Class PaymentMethod
@@ -17,19 +18,8 @@ use Juspay\RequestMethod;
  *
  * @package Juspay\Model
  */
-class PaymentMethod extends JuspayEntity {
+class PaymentMethod extends JuspayResponse {
     
-    /**
-     * Constructor
-     *
-     * @param array $params
-     */
-    public function __construct($params) {
-        foreach ( array_keys ( $params ) as $key ) {
-            $newKey = $this->camelize ( $key );
-            $this->$newKey = $params [$key];
-        }
-    }
     
     /**
      *
