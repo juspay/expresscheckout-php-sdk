@@ -75,6 +75,24 @@ class OrderTest extends TestCase {
         $this->assertTrue( $order != null );
         $this->assertTrue( $this->order->orderId == $order->orderId );
     }
+    public function testEncryptedRefundOrder() {
+        $this->testCreate();
+        $params = array ();
+        $params ['order_id'] = $this->order->orderId;
+        $params['unique_request_id'] = uniqid('php_sdk_test_');
+        $params['amount']= $this->order->amount;
+        $keys = [];
+        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        try {
+            $order = Order::encryptedOrderRefund($this->order->orderId, $params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+            $this->assertTrue( $order != null );
+            $this->assertTrue( $this->order->orderId == $order->orderId );
+        } catch ( JuspayException $e ) {
+            $this->assertTrue ( "invalid.order.not_successful" == $e->getErrorCode () );
+        }
+    }
+
     // public function testList() {
     //     $this->testCreate ();
     //     $orderList = Order::listAll ( null );

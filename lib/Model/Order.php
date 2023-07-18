@@ -193,5 +193,25 @@ class Order extends JuspayResponse {
         $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
         return new Order($response);
     }
+
+    /**
+     *
+     * @param string $orderId
+     * @param array $params
+     * @param RequestOptions|null $requestOptions
+     *
+     * @return Order
+     *
+     * @throws APIConnectionException
+     * @throws APIException
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     */
+    public static function encryptedOrderRefund($orderId, $params, $requestOptions = null)
+    {
+        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        $response = self::makeServiceCall("/v4/orders/$orderId/refunds", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
+        return new Order($response);
+    }
 }
 
