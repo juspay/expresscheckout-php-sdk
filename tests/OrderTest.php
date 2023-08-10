@@ -71,7 +71,7 @@ class OrderTest extends TestCase {
         $keys = [];
         $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
         $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        $order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+        $order = Order::status($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
         $this->assertTrue( $order != null );
         $this->assertTrue( $this->order->orderId == $order->orderId );
     }
@@ -85,7 +85,7 @@ class OrderTest extends TestCase {
         $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
         $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
         try {
-            $order = Order::encryptedOrderRefund($this->order->orderId, $params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+            $order = Order::refund($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
             $this->assertTrue( $order != null );
             $this->assertTrue( $this->order->orderId == $order->orderId );
         } catch ( JuspayException $e ) {

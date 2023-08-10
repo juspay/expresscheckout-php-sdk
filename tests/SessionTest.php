@@ -39,7 +39,7 @@ class SessionTest extends TestCase {
         $keys = [];
         $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
         $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        $session = Session::EncryptedCreateOrderSession($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+        $session = Session::create($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
         $this->assertTrue($session->status == "NEW");
         $this->assertTrue($session->id != null);
         $this->assertTrue($session->orderId != null);
