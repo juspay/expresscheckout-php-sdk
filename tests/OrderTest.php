@@ -2,6 +2,7 @@
 
 namespace Juspay\Test;
 
+use Juspay\JuspayEnvironment;
 use Juspay\Model\JuspayJWT;
 use Juspay\Model\Order;
 use Juspay\Model\OrderList;
@@ -55,6 +56,7 @@ class OrderTest extends TestCase {
         $this->assertTrue ($order->paymentLinks["iframe"] != null);
         $this->order = $order;
     }
+    
     public function testStatus() {
         $this->testCreate ();
         $params = array ();
@@ -75,6 +77,25 @@ class OrderTest extends TestCase {
         $this->assertTrue( $order != null );
         $this->assertTrue( $this->order->orderId == $order->orderId );
     }
+    public function testEncryptedOrderStatusGlobal()  {
+        $this->testCreate();
+        $params = array ();
+        $params ['order_id'] = $this->order->orderId;
+        $keys = [];
+        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
+        try {
+            $order = Order::status($params, null);
+            $this->assertTrue( $order != null );
+            $this->assertTrue( $this->order->orderId == $order->orderId );
+        } catch (JuspayException $e) {
+            JuspayEnvironment::init()->withJuspayJWT(null);
+            $this->assertTrue(False);
+        }
+        JuspayEnvironment::init()->withJuspayJWT(null);
+        
+    }
     public function testEncryptedRefundOrder() {
         $this->testCreate();
         $params = array ();
@@ -91,6 +112,26 @@ class OrderTest extends TestCase {
         } catch ( JuspayException $e ) {
             $this->assertTrue ( "invalid.order.not_successful" == $e->getErrorCode () );
         }
+    }
+    public function testEncryptedRefundOrderGlobal() {
+        $this->testCreate();
+        $params = array ();
+        $params ['order_id'] = $this->order->orderId;
+        $params['unique_request_id'] = uniqid('php_sdk_test_');
+        $params['amount']= $this->order->amount;
+        $keys = [];
+        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
+        try {
+            $order = Order::refund($params, null);
+            $this->assertTrue( $order != null );
+            $this->assertTrue( $this->order->orderId == $order->orderId );
+        } catch ( JuspayException $e ) {
+            JuspayEnvironment::init()->withJuspayJWT(null);
+            $this->assertTrue ( "invalid.order.not_successful" == $e->getErrorCode () );
+        }
+        JuspayEnvironment::init()->withJuspayJWT(null);
     }
 
     // public function testList() {
