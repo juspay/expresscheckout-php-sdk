@@ -82,6 +82,7 @@ $card = Card::create ( $params );
 
 Pass JuspayJWT in request option. JuspayJWT implements IJuspayJWT interface. IJuspayJWT has three methods consumePayload, preparePayload and Initialize (a factory method to initialize ISign and IEnc objects) along with three attributes array of keys, Sign of type ISign and Enc of type IEnc. JuspayJWT currently uses SignRSA5 which is a implementation of ISign interface and EncRSAOEAP which is a implementation of IEnc interface. Currently JuspayJWT class comes with the SDK. Implement IJuspayJWT to create custom JWT classes. JuspayJWT constructor accepts $keys and two kid as arguments.
 
+**With RequestOptions**
 ```php
 $params = array ();
 $params ['order_id'] = $this->order->orderId;
@@ -89,6 +90,16 @@ $keys = [];
 $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
 $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
 $order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+```
+**With JuspayEnvironment**
+```php
+$params = array ();
+$params ['order_id'] = $this->order->orderId;
+$keys = [];
+$keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
+$keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
+$order = Order::encryptedOrderStatus($params, null);
 ```
 
 ## To Run Test
