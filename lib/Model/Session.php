@@ -6,6 +6,7 @@ use Juspay\Exception\APIConnectionException;
 use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\JuspayEnvironment;
 use Juspay\RequestMethod;
 use Juspay\RequestOptions;
 
@@ -26,6 +27,10 @@ class Session extends JuspayResponse {
      * @throws InvalidRequestException
      */
     public static function create($params, $requestOptions = null) {
+        if (($requestOptions != null && $requestOptions->JuspayJWT != null) || JuspayEnvironment::getJuspayJWT() != null)
+        {
+            return self::EncryptedCreateOrderSession($params, $requestOptions);
+        }
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
@@ -33,9 +38,9 @@ class Session extends JuspayResponse {
         return new Session ( $response );
     }
 
-    public static function EncryptedCreateOrderSession($params, $requestOptions = null)
+    private static function EncryptedCreateOrderSession($params, $requestOptions = null)
     {
-        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        if ($params == null || count($params) == 0) throw new InvalidRequestException();
         $response = self::makeServiceCall("/v4/session", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
         return new Session($response);
     }

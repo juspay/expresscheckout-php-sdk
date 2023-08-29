@@ -6,6 +6,7 @@ use Juspay\Exception\APIConnectionException;
 use Juspay\Exception\APIException;
 use Juspay\Exception\AuthenticationException;
 use Juspay\Exception\InvalidRequestException;
+use Juspay\JuspayEnvironment;
 use Juspay\RequestMethod;
 use Juspay\RequestOptions;
 
@@ -94,7 +95,10 @@ class Order extends JuspayResponse {
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
-        $response = self::makeServiceCall ( "/order/status", $params, RequestMethod::POST, $requestOptions );
+        if (($requestOptions != null && $requestOptions->JuspayJWT != null) || JuspayEnvironment::getJuspayJWT() != null) {
+            return self::encryptedOrderStatus($params, $requestOptions);
+        }
+        $response = self::makeServiceCall ( "/order/status", $params, RequestMethod::GET, $requestOptions );
         $response = self::updateOrderResponseStructure ( $response );
         return new Order ( $response );
     }
@@ -149,6 +153,9 @@ class Order extends JuspayResponse {
      * @throws InvalidRequestException
      */
     public static function refund($params, $requestOptions = null) {
+        if (($requestOptions != null && $requestOptions->JuspayJWT != null) || JuspayEnvironment::getJuspayJWT() != null) {
+            return self::encryptedOrderRefund($params["order_id"], $params, $requestOptions);
+        }
         if ($params == null || count ( $params ) == 0) {
             throw new InvalidRequestException ();
         }
@@ -187,9 +194,9 @@ class Order extends JuspayResponse {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    public static function encryptedOrderStatus($params, $requestOptions = null)
+    private static function encryptedOrderStatus($params, $requestOptions = null)
     {
-        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        if ($params == null || count($params) == 0) throw new InvalidRequestException();
         $response = self::makeServiceCall("/v4/order-status", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
         return new Order($response);
     }
@@ -207,9 +214,9 @@ class Order extends JuspayResponse {
      * @throws AuthenticationException
      * @throws InvalidRequestException
      */
-    public static function encryptedOrderRefund($orderId, $params, $requestOptions = null)
+    private static function encryptedOrderRefund($orderId, $params, $requestOptions = null)
     {
-        if ($requestOptions == null || $requestOptions->JuspayJWT == null || $params == null || count($params) == 0) throw new InvalidRequestException();
+        if ($params == null || count($params) == 0) throw new InvalidRequestException();
         $response = self::makeServiceCall("/v4/orders/$orderId/refunds", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
         return new Order($response);
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace Juspay;
-
+use Juspay\Model\IJuspayJWT;
 /**
  * Class JuspayEnvironment
  *
@@ -50,7 +50,12 @@ class JuspayEnvironment {
      * @property JuspayEnvironment
      */
     private static $thisObj;
-    
+
+     /**
+     *
+     * @property IJuspayJWT $JuspayJWT
+     */
+    private static $JuspayJWT;
     /**
      * Initializes the Juspay ExpressCheckout payment environment with default
      * values and returns a singleton object of JuspayEnvironment class.
@@ -124,6 +129,19 @@ class JuspayEnvironment {
         return $this;
     }
     
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given Juspay JWT.
+     *
+     * @param IJuspayJWT $juspayJWT
+     *
+     * @return JuspayEnvironment
+     */
+    public function withJuspayJWT($juspayJWT) {
+        self::$JuspayJWT = $juspayJWT;
+        return $this;
+    }
+
     /**
      *
      * @return string
@@ -170,5 +188,13 @@ class JuspayEnvironment {
      */
     public static function getSdkVersion() {
         return self::$sdkVersion;
+    }
+
+     /**
+     *
+     * @return IJuspayJWT
+     */
+    public static function getJuspayJWT() {
+        return self::$JuspayJWT;
     }
 }

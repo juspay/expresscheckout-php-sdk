@@ -17,6 +17,7 @@ class RequestOptions {
     public function __construct(IJuspayJWT $juspayJWT = null) {
         $this->apiKey = JuspayEnvironment::getApiKey ();
         if ($juspayJWT != null) $this->JuspayJWT = $juspayJWT;
+        else $this->JuspayJWT = JuspayEnvironment::getJuspayJWT();
     }
     
     /**
