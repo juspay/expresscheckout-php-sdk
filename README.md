@@ -99,7 +99,92 @@ $keys = [];
 $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
 $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
 JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
-$order = Order::encryptedOrderStatus($params, null);
+$order = Order::status($params, null);
+```
+
+**Error Handling**
+```php
+<?php
+use Juspay\Exception\AuthenticationException;
+use Juspay\Exception\APIConnectionException;
+use Juspay\Exception\APIException;
+use Juspay\Exception\InvalidRequestException;
+use Juspay\Exception\JuspayException;
+use Juspay\Model\Order;
+try {
+$params = array ();
+$params ['order_id'] = "order id";
+$order = Order::status ( $params );
+}
+catch (APIConnectionException ex)
+{
+// Handle API connection exception
+}
+catch (APIException ex)
+{
+// Handle API exception
+}
+catch (AuthenticationException ex)
+{
+// Handle Authentication exception
+}
+catch (InvalidRequestException ex)
+{
+// Handle invalid request exception
+}
+catch (JuspayException ex)
+{
+// All above exception extends juspay exception
+// Default exception handler
+}
+
+```
+
+**Sample Integration**
+```php
+<?php
+use Juspay\JuspayEnvironment;
+use Juspay\Model\Order;
+use Juspay\Exception\JuspayException;
+JuspayEnvironment::init ()
+->withApiKey ("api key")
+->withBaseUrl ("base url")
+->withJuspay(new JuspayJWT($keys, "public key id", "private key id"));
+try {
+
+    // create order
+    $orderId = uniqid ();
+    $params = array ();
+    $params ['order_id'] = $orderId;
+    $params ['amount'] = 10000.0;
+    $order = Order::create ( $params );
+    $orderId = $order->orderId;
+
+    // Get order
+    $params = array ();
+    $params ['order_id'] = $orderId;
+    $order = Order::status ( $params );
+    $status = $order->status; // verify status of the order ("NEW", "CHARGED"..)
+
+    // update order
+    $params = array ();
+    $params ['amount'] = $order->amount + 100;
+    $order = Order::update ( $params, $orderId );
+
+    //Refund order
+    $params = array ();
+    $params ['order_id'] = $orderId;
+    $params ['amount'] = 10;
+    $params['unique_request_id'] = uniqid('php_sdk_test_');
+    $order = Order::refund ( $params );
+    $amountRefunded = $order->amountRefunded
+
+
+}
+catch (JuspayException $ex) {
+    // Handle exception
+}
+
 ```
 
 ## To Run Test
@@ -116,7 +201,6 @@ composer install --dev
 ```
 ### PHP Version 5
 ```shell
-COMPOSER=composer5.json composer install --dev
 ./vendor/bin/phpunit tests -c ./phpunit-config-php7.xml
 ```
 *Note:* Wallet test for authentication might fail due to OTP request limit
