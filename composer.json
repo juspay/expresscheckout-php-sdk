@@ -1,14 +1,6 @@
 {
 	"name" : "juspay/expresscheckout-php-sdk",
-	"description" : "Express Checkout SDK for PHP allows easy integration with Juspay's EC payments as a service platform",
-	"authors" : [{
-		"name" : "Ankur Gupta",
-		"email" : "ankur.gupta@juspay.in"
-	},
-	{
-		"name": "Sriduth Jayhari",
-		"email": "sriduth.jayhari@juspay.in"
-	}],
+	"description" : "The Juspay ExpressCheckout PHP SDK makes it easier for merchants to integrate the express-checkout APIs in their product",
 	"minimum-stability" : "stable",
 	"require" : {
 		"php": ">=5.3.3",
@@ -31,7 +23,7 @@
 			"Juspay\\Test\\" : "tests/"
 		}
 	},
-	"license" : "MIT",
+	"license" : "AGPL-3.0-only",
 	"support" : {
 		"email" : "support@juspay.in"
 	},
