@@ -95,6 +95,9 @@ abstract class JuspayEntity {
             }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
+        if ($requestOptions->getMerchantId()) array_push($headers, 'x-merchantid:'. $requestOptions->getMerchantId());
+        if ($requestOptions->getCustomerId()) array_push($headers, 'x-customerid:'. $requestOptions->getCustomerId());
+        //curl_setopt($curlObject, CURLOPT_VERBOSE, true);
         $response = curl_exec ( $curlObject );
         if ($response == false) {
             throw new APIConnectionException ( - 1, "connection_error", "connection_error", curl_error ( $curlObject ) );
