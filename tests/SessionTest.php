@@ -41,7 +41,7 @@ class SessionTest extends TestCase {
         $keys = [];
         $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
         $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        $session = Session::create($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+        $session = Session::create($params, new RequestOptions(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb", "key_26b1a82e16cf4c6e850325c3d98368cb")));
         $this->assertTrue($session->status == "NEW");
         $this->assertTrue($session->id != null);
         $this->assertTrue($session->orderId != null);
@@ -61,9 +61,9 @@ class SessionTest extends TestCase {
         $keys = [];
         $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
         $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
+        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb", "key_26b1a82e16cf4c6e850325c3d98368cb"));
         try {
-            $session = Session::create($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+            $session = Session::create($params, new RequestOptions(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb", "key_26b1a82e16cf4c6e850325c3d98368cb")));
             $this->assertTrue($session->status == "NEW");
             $this->assertTrue($session->id != null);
             $this->assertTrue($session->orderId != null);
