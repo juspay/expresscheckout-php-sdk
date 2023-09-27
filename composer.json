@@ -2,6 +2,10 @@
 	"name" : "juspay/expresscheckout-php-sdk",
 	"description" : "The Juspay ExpressCheckout PHP SDK makes it easier for merchants to integrate the express-checkout APIs in their product",
 	"minimum-stability" : "stable",
+	"authors" : [{
+		"name" : "Juspay Support",
+		"email" : "support@juspay.in"
+	}],
 	"require" : {
 		"php": ">=5.3.3",
 		"ext-curl" : "*",
