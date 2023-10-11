@@ -95,6 +95,7 @@ abstract class JuspayEntity {
             }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
+        curl_setopt ($curlObject, CURLOPT_CAINFO, realpath(__DIR__ . '/../data/cacert-2023-08-22.crt'));
         $response = curl_exec ( $curlObject );
         if ($response == false) {
             throw new APIConnectionException ( - 1, "connection_error", "connection_error", curl_error ( $curlObject ) );
