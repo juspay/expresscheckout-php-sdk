@@ -7,16 +7,13 @@ class JuspayJWT extends IJuspayJWT {
      * Prepare the payload.
      *
      * @param array $keys Private and Public key array ["publicKey"] ["privateKey"]
-     * @param string $publicKeyKid Public Key Key id
-     * @param string $privateKeyKid Private Key key id
+     * @param string $keyId Public Key id
      */
-    public function __construct(array $keys, $publicKeyKid, $privateKeyKid) {
+    public function __construct(array $keys, $keyId) {
         $this->keys = $keys;
-        $this->publicKeyKid = $publicKeyKid;
-        $this->privateKeyKid = $privateKeyKid;
+        $this->keyId = $keyId;
     }
-    public $privateKeyKid;
-    public $publicKeyKid;
+    public $keyId;
 
     /**
      * Prepare the payload.
@@ -52,11 +49,11 @@ class JuspayJWT extends IJuspayJWT {
      */
     public function Initialize() { // Factory Method
         if (version_compare(phpversion(), "7.1.0", ">=")) {
-            $this->Sign = new SignRSA($this->publicKeyKid);
-            $this->Enc = new EncRSAOEAP($this->privateKeyKid);
+            $this->Sign = new SignRSA($this->keyId);
+            $this->Enc = new EncRSAOEAP($this->keyId);
         } else {
-            $this->Sign = new SignRSA5($this->publicKeyKid);
-            $this->Enc = new EncRSAOEAP5($this->privateKeyKid);
+            $this->Sign = new SignRSA5($this->keyId);
+            $this->Enc = new EncRSAOEAP5($this->keyId);
         }
     }
 }

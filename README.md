@@ -89,7 +89,7 @@ $params ['order_id'] = $this->order->orderId;
 $keys = [];
 $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
 $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-$order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe", "testJwe")));
+$order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe")));
 ```
 **With JuspayEnvironment**
 ```php
@@ -98,7 +98,7 @@ $params ['order_id'] = $this->order->orderId;
 $keys = [];
 $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
 $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe", "testJwe"));
+JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe"));
 $order = Order::status($params, null);
 ```
 
@@ -149,7 +149,7 @@ use Juspay\Exception\JuspayException;
 JuspayEnvironment::init ()
 ->withApiKey ("api key")
 ->withBaseUrl ("base url")
-->withJuspay(new JuspayJWT($keys, "public key id", "private key id"));
+->withJuspay(new JuspayJWT($keys, "public key id");
 try {
 
     // create order
