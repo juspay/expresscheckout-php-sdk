@@ -70,10 +70,9 @@ class OrderTest extends TestCase {
         $this->testCreate();
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
-        $keys = [];
-        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        $order = Order::status($params, new RequestOptions(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb")));
+        $privateKey = file_get_contents("./tests/privateKey.pem");
+        $publicKey = file_get_contents("./tests/publicKey.pem");
+        $order = Order::status($params, new RequestOptions(new JuspayJWT("key_26b1a82e16cf4c6e850325c3d98368cb", $publicKey, $privateKey)));
         $this->assertTrue( $order != null );
         $this->assertTrue( $this->order->orderId == $order->orderId );
     }
@@ -81,10 +80,9 @@ class OrderTest extends TestCase {
         $this->testCreate();
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
-        $keys = [];
-        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb"));
+        $privateKey = file_get_contents("./tests/privateKey.pem");
+        $publicKey = file_get_contents("./tests/publicKey.pem");
+        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT("key_26b1a82e16cf4c6e850325c3d98368cb", $publicKey, $privateKey));
         try {
             $order = Order::status($params, null);
             $this->assertTrue( $order != null );
@@ -102,11 +100,10 @@ class OrderTest extends TestCase {
         $params ['order_id'] = $this->order->orderId;
         $params['unique_request_id'] = uniqid('php_sdk_test_');
         $params['amount']= $this->order->amount;
-        $keys = [];
-        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
+        $privateKey = file_get_contents("./tests/privateKey.pem");
+        $publicKey = file_get_contents("./tests/publicKey.pem");
         try {
-            $order = Order::refund($params, new RequestOptions(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb")));
+            $order = Order::refund($params, new RequestOptions(new JuspayJWT("key_26b1a82e16cf4c6e850325c3d98368cb", $publicKey, $privateKey)));
             $this->assertTrue( $order != null );
             $this->assertTrue( $this->order->orderId == $order->orderId );
         } catch ( JuspayException $e ) {
@@ -119,10 +116,9 @@ class OrderTest extends TestCase {
         $params ['order_id'] = $this->order->orderId;
         $params['unique_request_id'] = uniqid('php_sdk_test_');
         $params['amount']= $this->order->amount;
-        $keys = [];
-        $keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-        $keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "key_26b1a82e16cf4c6e850325c3d98368cb"));
+        $privateKey = file_get_contents("./tests/privateKey.pem");
+        $publicKey = file_get_contents("./tests/publicKey.pem");
+        JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT("key_26b1a82e16cf4c6e850325c3d98368cb", $publicKey, $privateKey));
         try {
             $order = Order::refund($params, null);
             $this->assertTrue( $order != null );

@@ -5,12 +5,14 @@ class JuspayJWT extends IJuspayJWT {
 
     /**
      * Prepare the payload.
-     *
-     * @param array $keys Private and Public key array ["publicKey"] ["privateKey"]
      * @param string $keyId Public Key id
+     * @param string $publicKey Public key
+     * @param string $privateKey Private Key
+     * 
      */
-    public function __construct(array $keys, $keyId) {
-        $this->keys = $keys;
+    public function __construct($keyId, $publicKey, $privateKey) {
+        $this->publicKey = $publicKey;
+        $this->privateKey = $privateKey;
         $this->keyId = $keyId;
     }
     public $keyId;
@@ -22,10 +24,10 @@ class JuspayJWT extends IJuspayJWT {
      * @return string The prepared payload.
      */
     public function preparePayload($payload) {
-        $signedPayload = $this->Sign->sign($this->keys["privateKey"], $payload);
+        $signedPayload = $this->Sign->sign($this->privateKey, $payload);
         $signedPayload = explode(".", $signedPayload);
         $signedPayload = "{\"header\":\"{$signedPayload[0]}\",\"payload\":\"{$signedPayload[1]}\",\"signature\":\"{$signedPayload[2]}\"}";
-        $encryptedPayload = $this->Enc->encrypt($this->keys["publicKey"], $signedPayload);
+        $encryptedPayload = $this->Enc->encrypt($this->publicKey, $signedPayload);
         $encryptedPayload = explode(".", $encryptedPayload);
         $encryptedPayload = "{\"header\":\"{$encryptedPayload[0]}\",\"encryptedKey\": \"{$encryptedPayload[1]}\",\"iv\":\"{$encryptedPayload[2]}\",\"encryptedPayload\":\"{$encryptedPayload[3]}\",\"tag\":\"{$encryptedPayload[4]}\"}";
         return $encryptedPayload;
@@ -39,8 +41,8 @@ class JuspayJWT extends IJuspayJWT {
 
     public function consumePayload($encryptedPayload) {
         $encryptedPayload = json_decode($encryptedPayload, true);
-        $signedPayload = json_decode($this->Enc->decrypt($this->keys["privateKey"], "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}"), true);
-        return $this->Sign->verifySign($this->keys["publicKey"], "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
+        $signedPayload = json_decode($this->Enc->decrypt($this->privateKey, "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}"), true);
+        return $this->Sign->verifySign($this->publicKey, "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
     }
 
     /**
