@@ -56,7 +56,15 @@ JuspayEnvironment::init()
 ->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
 ->withConnectTimeout(connectTimeout)
 ->withReadTimeout(readTimeout);
+```
 
+**To setup PHP SDK with custom CA Certificate, use following code:**
+
+```php
+JuspayEnvironment::init()
+->withApiKey("yourApiKey")
+->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
+->withCACertificatePath("file path to ca certificate");
 ```
 
 ## Using SDK ##
@@ -87,18 +95,18 @@ Pass JuspayJWT in request option. JuspayJWT implements IJuspayJWT interface. IJu
 $params = array ();
 $params ['order_id'] = $this->order->orderId;
 $keys = [];
-$keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-$keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-$order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT($keys, "testJwe")));
+$privateKey = file_get_contents("./tests/privateKey.pem");
+$publicKey = file_get_contents("./tests/publicKey.pem");
+$order = Order::encryptedOrderStatus($params, new RequestOptions(new JuspayJWT("testJwe", $publicKey, $privateKey)));
 ```
 **With JuspayEnvironment**
 ```php
 $params = array ();
 $params ['order_id'] = $this->order->orderId;
 $keys = [];
-$keys["privateKey"] = file_get_contents("./tests/privateKey.pem");
-$keys["publicKey"] = file_get_contents("./tests/publicKey.pem");
-JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT($keys, "testJwe"));
+$privateKey = file_get_contents("./tests/privateKey.pem");
+$publicKey = file_get_contents("./tests/publicKey.pem");
+JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT("testJwe", $publicKey, $privateKey));
 $order = Order::status($params, null);
 ```
 
@@ -185,7 +193,6 @@ catch (JuspayException $ex) {
     // Handle exception
 }
 
-```
 
 ## To Run Test
 
