@@ -70,7 +70,6 @@ abstract class JuspayEntity {
             array_push( $headers, 'Content-Type: application/json' );
             
             curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
-        
             curl_setopt ( $curlObject, CURLOPT_POST, 1 );
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
@@ -96,7 +95,14 @@ abstract class JuspayEntity {
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
         $caCertificatePath = JuspayEnvironment::getCACertificatePath();
-        if ($caCertificatePath == null) $caCertificatePath = realpath(__DIR__ . '/../data/cacert-2023-08-22.crt');
+        if ($caCertificatePath == null) {
+            $opensslCA = ini_get('openssl.cafile');
+            if ($opensslCA != null && $opensslCA != "") {
+                $caCertificatePath = realpath($opensslCA);
+            } else {
+                $caCertificatePath = realpath(__DIR__ . '/../data/cacert-2023-08-22.crt');
+            }
+        }
         curl_setopt ($curlObject, CURLOPT_CAINFO, $caCertificatePath);
         $response = curl_exec ( $curlObject );
         if ($response == false) {
