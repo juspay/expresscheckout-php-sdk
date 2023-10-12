@@ -10,7 +10,6 @@
 		"php": ">=7.1.0",
 		"ext-curl" : "*",
 		"ext-json" : "*",
-		"paragonie/sodium_compat": "*",
 		"web-token/jwt-framework": "^3.0 || ^2.0 || ^1.0"
 	},
 	"require-dev" : {
