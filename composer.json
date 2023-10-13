@@ -12,6 +12,13 @@
 		"ext-json" : "*",
 		"spomky-labs/jose-bundle": "^2.3"
 	},
+	"provide" : {
+		"ext-sodium": "*"
+	},
+	"suggest": {
+		"ext-gmp": "gmp extension is recommended to improve the sdk performance",
+		"ext-bcmath": "BCMath is recommended to improve the sdk performance"
+	},
 	"require-dev" : {
 		"phpunit/phpunit" : "4.* || ^9.0"
 	},

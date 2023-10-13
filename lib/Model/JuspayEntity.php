@@ -95,6 +95,16 @@ abstract class JuspayEntity {
             }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
+        $caCertificatePath = JuspayEnvironment::getCACertificatePath();
+        if ($caCertificatePath == null) {
+            $opensslCA = ini_get('openssl.cafile');
+            if ($opensslCA != null && $opensslCA != "") {
+                $caCertificatePath = realpath($opensslCA);
+            } else {
+                $caCertificatePath = realpath(__DIR__ . '/../data/cacert-2023-08-22.crt');
+            }
+        }
+        curl_setopt ($curlObject, CURLOPT_CAINFO, $caCertificatePath);
         $response = curl_exec ( $curlObject );
         if ($response == false) {
             throw new APIConnectionException ( - 1, "connection_error", "connection_error", curl_error ( $curlObject ) );

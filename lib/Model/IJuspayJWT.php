@@ -4,9 +4,15 @@ namespace Juspay\Model;
 abstract class IJuspayJWT {
      /**
      *
-     * @property array $keys
+     * @property string $publicKey
      */
-    public $keys;
+    public $publicKey;
+
+    /**
+     *
+     * @property string $privateKey
+     */
+    public $privateKey;
 
     /**
      * Prepare the payload.

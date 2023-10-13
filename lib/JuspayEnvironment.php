@@ -35,6 +35,13 @@ class JuspayEnvironment {
      * @property int
      */
     private static $connectTimeout;
+
+    /**
+     *
+     * @property string $caCertificatePath
+    */
+    private static $caCertificatePath;
+
     /**
      *
      * @property int
@@ -131,6 +138,23 @@ class JuspayEnvironment {
     
      /**
      * Initializes the Juspay ExpressCheckout payment environment
+     * with given ca certificate.
+     *
+     * @param string $path
+     *
+     * @return JuspayEnvironment
+     */
+    public function withCACertificatePath($path) {
+        if ($path == null) {
+            self::$caCertificatePath = null;
+            return $this;
+        }
+        self::$caCertificatePath = realpath($path);
+        return $this;
+    }
+
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
      * with given Juspay JWT.
      *
      * @param IJuspayJWT $juspayJWT
@@ -182,6 +206,14 @@ class JuspayEnvironment {
         return self::$readTimeout;
     }
     
+    /**
+     *
+     * @return string
+     */
+    public static function getCACertificatePath() {
+        return self::$caCertificatePath;
+    }
+
     /**
      *
      * @return string
