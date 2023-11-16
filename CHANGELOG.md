@@ -1,4 +1,8 @@
 # Change Log
+## [2.0.2] - 2023-11-16
+### Updated
+- Changed class name Session -> OrderSession
+- Updated test cases
 
 ## [1.0.3] - 2017-02-28
 ### Added
