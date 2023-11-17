@@ -2,6 +2,19 @@
 
 namespace Juspay;
 use Juspay\Model\IJuspayJWT;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+enum JuspayLogLevel {
+    case Debug;
+    case Error;
+    case Info;
+
+    case Off;
+}
 /**
  * Class JuspayEnvironment
  *
@@ -50,6 +63,7 @@ class JuspayEnvironment {
      * @property string
      */
     private static $sdkVersion;
+
     /**
      *
      * @property JuspayEnvironment
@@ -61,6 +75,25 @@ class JuspayEnvironment {
      * @property IJuspayJWT $JuspayJWT
      */
     private static $JuspayJWT;
+
+     /**
+     *
+     * @property JuspayLogLevel $logLevel
+     */
+    private static $logLevel;
+
+      /**
+     *
+     * @property Logger  $logger
+     */
+    public static $logger;
+
+        /**
+     *
+     * @property string  $logFilePath
+     */
+    public static $logFilePath;
+
     /**
      * Initializes the Juspay ExpressCheckout payment environment with default
      * values and returns a singleton object of JuspayEnvironment class.
@@ -77,11 +110,39 @@ class JuspayEnvironment {
             self::$connectTimeout = 15;
             self::$readTimeout = 30;
             self::$sdkVersion = file_get_contents ( __DIR__ . '/../VERSION' );
+            self::buildLogger();
             self::$thisObj = new JuspayEnvironment ();
             return self::$thisObj;
         }
     }
     
+    static function buildLogger()
+    {
+        self::$logger = new Logger("expresscheckout");
+        $dateFormat = "Y-m-d H:m:s.v";
+        $output = "%datetime% - %level_name% - %message%\n";
+        $logFilePath = self::$logFilePath == null ? 'log/juspay_sdk.log' : self::$logFilePath;
+        $stream = new RotatingFileHandler($logFilePath, 1, self::getMonoLogLevel());
+        $console = new StreamHandler("php://stdout",  self::getMonoLogLevel());
+        $formatter = new LineFormatter($output, $dateFormat);
+        $stream->setFormatter($formatter);
+        $console->setFormatter($formatter);
+        self::$logger->pushHandler($stream);
+        self::$logger->pushHandler($console);
+    }
+
+    static function getMonoLogLevel() {
+        switch (self::getLogLevel()) {
+            case JuspayLogLevel::Debug:
+                return Level::Debug;
+            case JuspayLogLevel::Error:
+                return Level::Error;
+            case JuspayLogLevel::Info:
+                return Level::Info;
+            case JuspayLogLevel::Off:
+                return Level::Emergency;
+        }
+    }
     /**
      * Initializes the Juspay ExpressCheckout payment environment
      * with given API Key.
@@ -164,6 +225,39 @@ class JuspayEnvironment {
         return $this;
     }
 
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given JuspayLogLevel.
+     *
+     * @param JuspayLogLevel $logLevel
+     *
+     * @return JuspayEnvironment
+     */
+    public function withLogLevel($logLevel) {
+        if ($logLevel == null) {
+            self::$logLevel = JuspayLogLevel::Off;
+            self::buildLogger();
+            return $this;
+        }
+        self::$logLevel = $logLevel;
+        self::buildLogger();
+        return $this;
+    }
+
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given LogFilePath.
+     *
+     * @param string $logFilePath
+     *
+     * @return JuspayEnvironment
+     */
+    public function withLogFilePath($logFilePath) {
+        self::$logFilePath = $logFilePath;
+        self::buildLogger();
+        return $this;
+    }
+
     /**
      *
      * @return string
@@ -226,5 +320,24 @@ class JuspayEnvironment {
      */
     public static function getJuspayJWT() {
         return self::$JuspayJWT;
+    }
+
+    /**
+     *
+     * @return JuspayLogLevel
+    */
+    public static function getLogLevel() {
+        if (self::$logLevel == null) {
+            self::$logLevel = JuspayLogLevel::Off;
+        }
+        return self::$logLevel;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getLogFilePath() {
+        return self::$logFilePath;
     }
 }
