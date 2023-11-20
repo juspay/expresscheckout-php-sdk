@@ -53,7 +53,6 @@ abstract class JuspayEntity {
         curl_setopt ( $curlObject, CURLOPT_USERAGENT, JuspayEnvironment::getSdkVersion () );
         curl_setopt ( $curlObject, CURLOPT_TIMEOUT, JuspayEnvironment::getReadTimeout () );
         curl_setopt ( $curlObject, CURLOPT_CONNECTTIMEOUT, JuspayEnvironment::getConnectTimeout () );
-        curl_setopt ($curlObject, CURLINFO_HEADER_OUT, true);
         $headers = array('version: ' . JuspayEnvironment::getApiVersion());
         if ($requestOptions->getMerchantId()) array_push($headers, 'x-merchantid:'. $requestOptions->getMerchantId());
         if ($requestOptions->getCustomerId()) array_push($headers, 'x-customerid:'. $requestOptions->getCustomerId());
@@ -115,7 +114,6 @@ abstract class JuspayEntity {
             }
         }
         curl_setopt ($curlObject, CURLOPT_CAINFO, $caCertificatePath);
-        curl_setopt($curlObject, CURLOPT_VERBOSE, true);
         $log["url"] = $url;
         $log["headers"] = $headers;
         JuspayEnvironment::$logger->debug(json_encode($log));
