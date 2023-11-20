@@ -3,6 +3,7 @@
 namespace Juspay\Test;
 
 use Juspay\JuspayEnvironment;
+use Juspay\JuspayLogLevel;
 
 class TestEnvironment {
     public function __construct() {
@@ -17,4 +18,6 @@ class TestEnvironment {
 new TestEnvironment();
 JuspayEnvironment::init ()
 ->withApiKey ( TestEnvironment::$apiKey )
-->withBaseUrl ( TestEnvironment::$baseUrl );
+->withBaseUrl ( TestEnvironment::$baseUrl )
+->withLogLevel(JuspayLogLevel::Debug)
+->withLogFilePath("log/juspay_test.log");;

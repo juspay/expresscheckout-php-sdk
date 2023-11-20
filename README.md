@@ -161,7 +161,7 @@ try {
     $orderId = uniqid ();
     $params = array ();
     $params ['order_id'] = $orderId;
-    $params ['amount'] = 10000.0;
+    $params ['amount'] = 100.0;
     $order = Order::create ( $params );
     $orderId = $order->orderId;
 

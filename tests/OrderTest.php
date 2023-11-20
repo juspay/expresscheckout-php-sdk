@@ -15,7 +15,7 @@ class OrderTest extends TestCase {
         $orderId = uniqid ();
         $params = array ();
         $params ['order_id'] = $orderId;
-        $params ['amount'] = 10000.0;
+        $params ['amount'] = 100.0;
         $params ['currency'] = "INR";
         $params ['customer_id'] = "juspay_test_1";
         $params ['customer_email'] = "test@juspay.in";
@@ -167,7 +167,7 @@ class OrderTest extends TestCase {
         $orderId = uniqid ();
         $params = array ();
         $params ['order_id'] = $orderId;
-        $params ['amount'] = 10000.0;
+        $params ['amount'] = 100.0;
         $params ['currency'] = "INR";
         $params ['customer_id'] = "juspay_test_1";
         $params ['customer_email'] = "test@juspay.in";

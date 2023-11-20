@@ -1,4 +1,10 @@
 # Change Log
+# Change Log
+## [1.1.2] - 2023-11-2p
+### Added
+- Changed class name Session -> OrderSession
+- Updated test cases
+- Added Logger
 
 ## [1.0.3] - 2017-02-28
 ### Added

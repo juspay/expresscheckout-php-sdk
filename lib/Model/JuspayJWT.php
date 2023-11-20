@@ -1,5 +1,7 @@
 <?php
 namespace Juspay\Model;
+use Exception;
+use Juspay\Exception\JuspayException;
 
 class JuspayJWT extends IJuspayJWT {
 
@@ -24,13 +26,17 @@ class JuspayJWT extends IJuspayJWT {
      * @return string The prepared payload.
      */
     public function preparePayload($payload) {
-        $signedPayload = $this->Sign->sign($this->privateKey, $payload);
-        $signedPayload = explode(".", $signedPayload);
-        $signedPayload = "{\"header\":\"{$signedPayload[0]}\",\"payload\":\"{$signedPayload[1]}\",\"signature\":\"{$signedPayload[2]}\"}";
-        $encryptedPayload = $this->Enc->encrypt($this->publicKey, $signedPayload);
-        $encryptedPayload = explode(".", $encryptedPayload);
-        $encryptedPayload = "{\"header\":\"{$encryptedPayload[0]}\",\"encryptedKey\": \"{$encryptedPayload[1]}\",\"iv\":\"{$encryptedPayload[2]}\",\"encryptedPayload\":\"{$encryptedPayload[3]}\",\"tag\":\"{$encryptedPayload[4]}\"}";
-        return $encryptedPayload;
+        try {
+            $signedPayload = $this->Sign->sign($this->privateKey, $payload);
+            $signedPayload = explode(".", $signedPayload);
+            $signedPayload = "{\"header\":\"{$signedPayload[0]}\",\"payload\":\"{$signedPayload[1]}\",\"signature\":\"{$signedPayload[2]}\"}";
+            $encryptedPayload = $this->Enc->encrypt($this->publicKey, $signedPayload);
+            $encryptedPayload = explode(".", $encryptedPayload);
+            $encryptedPayload = "{\"header\":\"{$encryptedPayload[0]}\",\"encryptedKey\": \"{$encryptedPayload[1]}\",\"iv\":\"{$encryptedPayload[2]}\",\"encryptedPayload\":\"{$encryptedPayload[3]}\",\"tag\":\"{$encryptedPayload[4]}\"}";
+            return $encryptedPayload;
+        } catch (Exception $e) {
+            throw new JuspayException(-1, "ERROR", "jwt_error", $e->getMessage());
+        }
     }
 
     /**
@@ -40,9 +46,13 @@ class JuspayJWT extends IJuspayJWT {
      */
 
     public function consumePayload($encryptedPayload) {
-        $encryptedPayload = json_decode($encryptedPayload, true);
-        $signedPayload = json_decode($this->Enc->decrypt($this->privateKey, "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}"), true);
-        return $this->Sign->verifySign($this->publicKey, "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
+        try {
+            $encryptedPayload = json_decode($encryptedPayload, true);
+            $signedPayload = json_decode($this->Enc->decrypt($this->privateKey, "{$encryptedPayload["header"]}.{$encryptedPayload["encryptedKey"]}.{$encryptedPayload["iv"]}.{$encryptedPayload["encryptedPayload"]}.{$encryptedPayload["tag"]}"), true);
+            return $this->Sign->verifySign($this->publicKey, "{$signedPayload["header"]}.{$signedPayload["payload"]}.{$signedPayload["signature"]}");
+        } catch (Exception $e) {
+            throw new JuspayException(-1, "ERROR", "jwt_error", $e->getMessage());
+        }
     }
 
     /**

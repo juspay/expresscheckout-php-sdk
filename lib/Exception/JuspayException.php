@@ -3,6 +3,7 @@
 namespace Juspay\Exception;
 
 use Exception;
+use Juspay\JuspayEnvironment;
 
 class JuspayException extends Exception {
     private $httpResponseCode;
@@ -13,8 +14,9 @@ class JuspayException extends Exception {
         parent::__construct ( $errorMessage );
         $this->httpResponseCode = $httpResponseCode;
         $this->status = $status;
-        $this->errorCode = $errorCode;
-        $this->errorMessage = $errorMessage;
+        $this->addErrorCode = $errorCode;
+        $this->addErrorMessage = $errorMessage;
+        JuspayEnvironment::$logger->addError(json_encode(["status_code" => $httpResponseCode, "status" => $status, "error_code" => $errorCode, "errorMessage"=> $errorMessage]));
     }
     public function getHttpResponseCode() {
         return $this->httpResponseCode;
@@ -23,9 +25,9 @@ class JuspayException extends Exception {
         return $this->status;
     }
     public function getErrorCode() {
-        return $this->errorCode;
+        return $this->addErrorCode;
     }
     public function getErrorMessage() {
-        return $this->errorMessage;
+        return $this->addErrorMessage;
     }
 }

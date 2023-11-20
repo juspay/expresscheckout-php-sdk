@@ -2,6 +2,19 @@
 
 namespace Juspay;
 use Juspay\Model\IJuspayJWT;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+class JuspayLogLevel {
+    const Debug = 1;
+    const Error = 2;
+    const Info = 3;
+
+    const Off = 4;
+}
 /**
  * Class JuspayEnvironment
  *
@@ -62,6 +75,24 @@ class JuspayEnvironment {
      *
      * @property IJuspayJWT $JuspayJWT
      */
+
+     /**
+     *
+     * @property JuspayLogLevel $logLevel
+     */
+    private static $logLevel;
+
+      /**
+     *
+     * @property Logger  $logger
+     */
+    public static $logger;
+
+        /**
+     *
+     * @property string  $logFilePath
+     */
+    public static $logFilePath;
     private static $JuspayJWT;
     /**
      * Initializes the Juspay ExpressCheckout payment environment with default
@@ -79,8 +110,37 @@ class JuspayEnvironment {
             self::$connectTimeout = 15;
             self::$readTimeout = 30;
             self::$sdkVersion = file_get_contents ( __DIR__ . '/../VERSION' );
+            self::buildLogger();
             self::$thisObj = new JuspayEnvironment ();
             return self::$thisObj;
+        }
+    }
+
+    static function buildLogger()
+    {
+        self::$logger = new Logger("expresscheckout");
+        $dateFormat = "Y-m-d H:m:s.u";
+        $output = "%datetime% - %level_name% - %message%\n";
+        $logFilePath = self::$logFilePath == null ? 'log/juspay_sdk.log' : self::$logFilePath;
+        $stream = new RotatingFileHandler($logFilePath, 1, self::getMonoLogLevel());
+        $console = new StreamHandler("php://stdout",  self::getMonoLogLevel());
+        $formatter = new LineFormatter($output, $dateFormat);
+        $stream->setFormatter($formatter);
+        $console->setFormatter($formatter);
+        self::$logger->pushHandler($stream);
+        self::$logger->pushHandler($console);
+    }
+
+    static function getMonoLogLevel() {
+        switch (self::getLogLevel()) {
+            case JuspayLogLevel::Debug:
+                return Logger::DEBUG;
+            case JuspayLogLevel::Error:
+                return Logger::ERROR;
+            case JuspayLogLevel::Info:
+                return Logger::INFO;
+            case JuspayLogLevel::Off:
+                return Logger::EMERGENCY;
         }
     }
     
@@ -166,6 +226,39 @@ class JuspayEnvironment {
         return $this;
     }
 
+      /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given JuspayLogLevel.
+     *
+     * @param int $logLevel
+     *
+     * @return JuspayEnvironment
+     */
+    public function withLogLevel($logLevel) {
+        if ($logLevel == null) {
+            self::$logLevel = JuspayLogLevel::Off;
+            self::buildLogger();
+            return $this;
+        }
+        self::$logLevel = $logLevel;
+        self::buildLogger();
+        return $this;
+    }
+
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given LogFilePath.
+     *
+     * @param string $logFilePath
+     *
+     * @return JuspayEnvironment
+     */
+    public function withLogFilePath($logFilePath) {
+        self::$logFilePath = $logFilePath;
+        self::buildLogger();
+        return $this;
+    }
+
     /**
      *
      * @return string
@@ -228,5 +321,24 @@ class JuspayEnvironment {
      */
     public static function getJuspayJWT() {
         return self::$JuspayJWT;
+    }
+
+    /**
+     *
+     * @return int
+    */
+    public static function getLogLevel() {
+        if (self::$logLevel == null) {
+            self::$logLevel = JuspayLogLevel::Off;
+        }
+        return self::$logLevel;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getLogFilePath() {
+        return self::$logFilePath;
     }
 }

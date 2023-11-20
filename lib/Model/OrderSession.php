@@ -11,7 +11,7 @@ use Juspay\RequestMethod;
 use Juspay\RequestOptions;
 
 
-class Session extends JuspayResponse {
+class OrderSession extends JuspayResponse {
     
     
     /**
@@ -19,7 +19,7 @@ class Session extends JuspayResponse {
      * @param array $params
      * @param RequestOptions|null $requestOptions
      *
-     * @return Session
+     * @return OrderSession
      *
      * @throws APIConnectionException
      * @throws APIException
@@ -35,13 +35,13 @@ class Session extends JuspayResponse {
             throw new InvalidRequestException ();
         }
         $response = self::makeServiceCall ( "/session", $params, RequestMethod::POST, $requestOptions, "application/json");
-        return new Session ( $response );
+        return new OrderSession ( $response );
     }
 
     private static function EncryptedCreateOrderSession($params, $requestOptions = null)
     {
         if ($params == null || count($params) == 0) throw new InvalidRequestException();
         $response = self::makeServiceCall("/v4/session", $params, RequestMethod::POST, $requestOptions, 'application/json', true);
-        return new Session($response);
+        return new OrderSession($response);
     }
 }
