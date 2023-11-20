@@ -44,6 +44,7 @@ abstract class JuspayEntity {
         }
         $url = JuspayEnvironment::getBaseUrl () . $path;
         $curlObject = curl_init ();
+        $log = array();
         curl_setopt ( $curlObject, CURLOPT_RETURNTRANSFER, true );
         curl_setopt ( $curlObject, CURLOPT_HEADER, true );
         curl_setopt ( $curlObject, CURLOPT_NOBODY, false );
@@ -52,14 +53,14 @@ abstract class JuspayEntity {
         curl_setopt ( $curlObject, CURLOPT_USERAGENT, JuspayEnvironment::getSdkVersion () );
         curl_setopt ( $curlObject, CURLOPT_TIMEOUT, JuspayEnvironment::getReadTimeout () );
         curl_setopt ( $curlObject, CURLOPT_CONNECTTIMEOUT, JuspayEnvironment::getConnectTimeout () );
-
+        curl_setopt ($curlObject, CURLINFO_HEADER_OUT, true);
         $headers = array('version: ' . JuspayEnvironment::getApiVersion());
         if ($requestOptions->getMerchantId()) array_push($headers, 'x-merchantid:'. $requestOptions->getMerchantId());
         if ($requestOptions->getCustomerId()) array_push($headers, 'x-customerid:'. $requestOptions->getCustomerId());
         if ($method == RequestMethod::GET) {
             curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
-        
             curl_setopt ( $curlObject, CURLOPT_HTTPGET, 1 );
+            $log["method"] = "GET";
             if ($params != null) {
                 $encodedParams = http_build_query ( $params );
                 if ($encodedParams != null && $encodedParams != "") {
@@ -71,14 +72,21 @@ abstract class JuspayEntity {
             
             curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
             curl_setopt ( $curlObject, CURLOPT_POST, 1 );
+            $log["method"] = "POST";
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
             } else {
                 if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
                     $requestOptions->JuspayJWT->Initialize();
-                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $requestOptions->JuspayJWT->preparePayload(json_encode($params)));
-                } else { 
-                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, json_encode($params) );
+                    $encodedParams = json_encode($params);
+                    $encBody = $requestOptions->JuspayJWT->preparePayload($encodedParams);
+                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $encBody);
+                    $log["body"] = $encBody;
+                    $log["decrypted_body"] = $encodedParams;
+                } else {
+                    $encodedParams = json_encode($params);
+                    curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $encodedParams );
+                    $log["body"] = $encodedParams;
                 }
             }
         } else {
@@ -87,10 +95,13 @@ abstract class JuspayEntity {
             curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);
         
             curl_setopt ( $curlObject, CURLOPT_POST, 1 );
+            $log["method"] = "POST";
             if ($params == null) {
                 curl_setopt ( $curlObject, CURLOPT_POSTFIELDSIZE, 0 );
             } else {
-                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, http_build_query($params) );
+                $body = http_build_query($params);
+                curl_setopt ( $curlObject, CURLOPT_POSTFIELDS, $body);
+                $log["body"] = $body;
             }
         }
         curl_setopt ( $curlObject, CURLOPT_URL, $url );
@@ -104,18 +115,28 @@ abstract class JuspayEntity {
             }
         }
         curl_setopt ($curlObject, CURLOPT_CAINFO, $caCertificatePath);
+        curl_setopt($curlObject, CURLOPT_VERBOSE, true);
+        $log["url"] = $url;
+        $log["headers"] = $headers;
+        JuspayEnvironment::$logger->debug(json_encode($log));
         $response = curl_exec ( $curlObject );
         if ($response == false) {
             throw new APIConnectionException ( - 1, "connection_error", "connection_error", curl_error ( $curlObject ) );
         } else {
+            $log = array();
             $responseCode = curl_getinfo ( $curlObject, CURLINFO_HTTP_CODE );
             $headerSize = curl_getinfo ( $curlObject, CURLINFO_HEADER_SIZE );
-            $responseBody = json_decode ( substr ( $response, $headerSize ), true );
+            $encodedResponse = substr ( $response, $headerSize );
+            $responseBody = json_decode ($encodedResponse , true );
+            $log = [ "status_code" => $responseCode,  "response" => $encodedResponse];
             curl_close ( $curlObject );
             if ($responseCode >= 200 && $responseCode < 300) {
                 if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
-                    $responseBody = json_decode($requestOptions->JuspayJWT->consumePayload(substr ( $response, $headerSize )), true);
+                    $decryptedResponse = $requestOptions->JuspayJWT->consumePayload(substr ( $response, $headerSize ));
+                    $responseBody = json_decode($decryptedResponse, true);
+                    $log["decryptedResponse"] = $decryptedResponse;
                 }
+                JuspayEnvironment::$logger->debug(json_encode($log));
                 return $responseBody;
             } else {
                 $status = null;

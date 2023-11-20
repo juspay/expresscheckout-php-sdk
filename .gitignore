@@ -6,3 +6,4 @@
 *.cache
 *.lock
 .DS_Store
+*.log
