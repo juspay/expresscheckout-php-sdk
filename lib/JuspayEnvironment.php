@@ -4,16 +4,15 @@ namespace Juspay;
 use Juspay\Model\IJuspayJWT;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
-use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-enum JuspayLogLevel {
-    case Debug;
-    case Error;
-    case Info;
+class JuspayLogLevel {
+    const Debug = 1;
+    const Error = 2;
+    const Info = 3;
 
-    case Off;
+    const Off = 4;
 }
 /**
  * Class JuspayEnvironment
@@ -134,14 +133,15 @@ class JuspayEnvironment {
     static function getMonoLogLevel() {
         switch (self::getLogLevel()) {
             case JuspayLogLevel::Debug:
-                return Level::Debug;
+                return Logger::DEBUG;
             case JuspayLogLevel::Error:
-                return Level::Error;
+                return Logger::ERROR;
             case JuspayLogLevel::Info:
-                return Level::Info;
+                return Logger::INFO;
             case JuspayLogLevel::Off:
-                return Level::Emergency;
+                return Logger::EMERGENCY;
         }
+
     }
     /**
      * Initializes the Juspay ExpressCheckout payment environment
@@ -229,7 +229,7 @@ class JuspayEnvironment {
      * Initializes the Juspay ExpressCheckout payment environment
      * with given JuspayLogLevel.
      *
-     * @param JuspayLogLevel $logLevel
+     * @param int $logLevel
      *
      * @return JuspayEnvironment
      */
@@ -324,7 +324,7 @@ class JuspayEnvironment {
 
     /**
      *
-     * @return JuspayLogLevel
+     * @return int
     */
     public static function getLogLevel() {
         if (self::$logLevel == null) {
