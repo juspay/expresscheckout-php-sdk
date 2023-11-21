@@ -11,7 +11,7 @@
 		"ext-curl" : "*",
 		"ext-json" : "*",
 		"spomky-labs/jose-bundle": "^2.3",
-		"monolog/monolog": "^1.27"
+		"monolog/monolog": "^1.0"
 	},
 	"provide" : {
 		"ext-sodium": "*"
