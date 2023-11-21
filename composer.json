@@ -7,10 +7,10 @@
 		"email" : "support@juspay.in"
 	}],
 	"require" : {
-		"php": ">=5.3.3",
+		"php": ">=5.6.0",
 		"ext-curl" : "*",
 		"ext-json" : "*",
-		"spomky-labs/jose-bundle": "^2.3",
+		"spomky-labs/jose-bundle": "^2.0",
 		"monolog/monolog": "^1.0"
 	},
 	"provide" : {
