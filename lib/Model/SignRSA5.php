@@ -1,9 +1,9 @@
 <?php
 namespace Juspay\Model;
+use Juspay\JWT\JWK;
+use Juspay\JWT\JWS;
+use Juspay\JWT\RSA256;
 
-use Jose\Factory\JWKFactory;
-use Jose\Factory\JWSFactory;
-use Jose\Loader;
 
 class SignRSA5 extends ISign {
 
@@ -24,8 +24,9 @@ class SignRSA5 extends ISign {
     * @return string Returns signed string
     */
     public function sign($privateKey, $payload) {
-        $privateJWKKey = JWKFactory::createFromKey($privateKey);
-        return JWSFactory::createJWSToCompactJSON($payload, $privateJWKKey, [ 'alg' => 'RS256', 'kid' => $this->kid ]);
+        $privateJWKKey = new JWK($privateKey);
+        $jws = new JWS(new RSA256());
+        return $jws->createJWSandSerialize($privateJWKKey, $payload, ['kid' => $this->kid]);
     }
 
     /**
@@ -35,10 +36,10 @@ class SignRSA5 extends ISign {
      * @return string Decoded payload
      */
     public function verifySign($publicKey, $signedPayload) {
-        $publicJWKKey = JWKFactory::createFromKey($publicKey);
-        $loader = new Loader();
-        $jwsDecoded = $loader->loadAndVerifySignatureUsingKey($signedPayload, $publicJWKKey, ['RS256']);
-        return json_encode($jwsDecoded->getPayload());
+        $publicJWKKey = new JWK($publicKey);
+        $jws = new JWS(new RSA256());
+        $jws->verify($publicJWKKey, $signedPayload);
+        return $jws->payload;
     }
 }
 ?>

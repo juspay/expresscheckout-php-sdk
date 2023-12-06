@@ -18,6 +18,4 @@ class TestEnvironment {
 new TestEnvironment();
 JuspayEnvironment::init ()
 ->withApiKey ( TestEnvironment::$apiKey )
-->withBaseUrl ( TestEnvironment::$baseUrl )
-->withLogLevel(JuspayLogLevel::Debug)
-->withLogFilePath("log/juspay_test.log");
+->withBaseUrl ( TestEnvironment::$baseUrl );
