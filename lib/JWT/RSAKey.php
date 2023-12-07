@@ -3,6 +3,7 @@ namespace Juspay\JWT;
 
 use Juspay\JWT\Base64Url;
 use InvalidArgumentException;
+use phpseclib3\Crypt\PublicKeyLoader;
 
 class RSAKey {
 
@@ -15,7 +16,6 @@ class RSAKey {
             if (!array_key_exists('rsa', $details)) {
                 throw new InvalidArgumentException('Unable to get details of the rsa key');
             }
-            $this->values['kty'] = 'RSA';
             $keys = [
                 'n' => 'n',
                 'e' => 'e',
@@ -32,9 +32,7 @@ class RSAKey {
                     $this->values[array_search($key, $keys)] = $value;
                 }
             }
-            if (!$this->isPrivate()) {
-                $this->values['key'] = $details['key'];
-            }
+            $this->values['kty'] = 'RSA';
         }
     }
 
@@ -43,24 +41,12 @@ class RSAKey {
      */
     public function toPEM()
     {
-        if (self::isPrivate()) {
-            $rsaParameters = [];
-            $rsaParameters['n'] = Base64Url::decode($this->values['n']);
-            $rsaParameters['e'] = Base64Url::decode($this->values['e']);
-            $rsaParameters['d'] = Base64Url::decode($this->values['d']);
-            $rsaParameters['p'] = Base64Url::decode($this->values['p']);
-            $rsaParameters['q'] = Base64Url::decode($this->values['q']);
-            $rsaParameters['dmp1'] = Base64Url::decode($this->values['dp']);
-            $rsaParameters['dmq1'] = Base64Url::decode($this->values['dq']);
-            $rsaParameters['iqmp'] = Base64Url::decode($this->values['qi']);
-            $keyResource = openssl_pkey_new([
-                'rsa' => $rsaParameters,
-            ]);
-            openssl_pkey_export($keyResource, $pemKey); 
-            return $pemKey;
-        } else {
-            return $this->values["key"];
-        }
+        $jwkParams = $this->values;
+        $jwkParams['kty'] = 'RSA';
+        $jwkKey["keys"] = [$jwkParams];
+        $jwkKey = json_encode($jwkKey);
+        $key = PublicKeyLoader::load($jwkKey);
+        return $key->toString('PKCS8');
     }
 
     /**
