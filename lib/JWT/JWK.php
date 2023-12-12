@@ -1,7 +1,6 @@
 <?php
 namespace Juspay\JWT;
-use InvalidArgumentException;
-use RuntimeException;
+use Juspay\Exception\JuspayException;
 use const OPENSSL_KEYTYPE_RSA;
 class JWK {
     /**
@@ -30,24 +29,14 @@ class JWK {
      */
     public function loadFromKey($key)
     {
-        try {
-            return self::loadKeyFromDER($key);
-        } catch (\Exception $e) {
-            return self::loadKeyFromPEM($key);
-        }
-    }
-
-    private function loadKeyFromDER($key)
-    {
-        $pem = self::convertDerToPem($key);
-        return self::loadKeyFromPEM($pem);
+        return self::loadKeyFromPEM($key);
     }
 
     private function loadKeyFromPEM($pem)
     {
 
-        if (!extension_loaded('openssl')) {
-            throw new RuntimeException('Please install the OpenSSL extension');
+        if (!extension_loaded('openssl')) { 
+            throw new JuspayException(-1, "ERROR", "jwk_error", "Please install the OpenSSL extension");
         }
         self::sanitizePEM($pem);
         $res = openssl_pkey_get_private($pem);
@@ -55,26 +44,20 @@ class JWK {
             $res = openssl_pkey_get_public($pem);
         }
         if (false === $res) {
-            throw new InvalidArgumentException('Unable to load the key.');
+            throw new JuspayException(-1, "ERROR", "jwk_error", 'Unable to load the key');
         }
 
         $details = openssl_pkey_get_details($res);
         if (!is_array($details) || !array_key_exists('type', $details)) {
-            throw new InvalidArgumentException('Unable to get details of the key');
+            throw new JuspayException(-1, "ERROR", "jwk_error", 'Unable to get details of the key');
         }
         switch ($details['type']) {
             case OPENSSL_KEYTYPE_RSA:
                 $rsa = new RSAKey($details);
                 return $rsa->values;
             default:
-                throw new InvalidArgumentException('Unsupported key type');
+                throw new JuspayException(-1, "ERROR", "jwk_error", 'Unsupported key type');
         }
-    }
-
-    private function convertDerToPem($der_data)
-    {
-        $pem = chunk_split(base64_encode($der_data), 64, PHP_EOL);
-        return '-----BEGIN CERTIFICATE-----'.PHP_EOL.$pem.'-----END CERTIFICATE-----'.PHP_EOL;
     }
 
     private function sanitizePEM(&$pem)

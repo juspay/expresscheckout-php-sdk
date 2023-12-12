@@ -1,6 +1,6 @@
 <?php
 namespace Juspay\JWT;
-use RuntimeException;
+use Juspay\Exception\JuspayException;
 class RSA256 extends ISigningAlgorithm {
 
     /**
@@ -11,7 +11,7 @@ class RSA256 extends ISigningAlgorithm {
         $privateKey = new RSAKey($privateKey->jsonSerialize());
         $result = openssl_sign($payload, $signature, $privateKey->toPEM(), $this->getAlgorithm());
         if ($result === false) {
-            throw new RuntimeException('An error occurred during the creation of the signature');
+            throw new JuspayException(-1, "ERROR", "jws_error", "'An error occurred during the creation of the signature");
         }
         return $signature;
         

@@ -1,8 +1,8 @@
 <?php
 namespace Juspay\JWT;
-use Juspay\JWT\Base64Url;
 use Exception;
-use RuntimeException;
+use Juspay\Exception\JuspayException;
+use Juspay\JWT\Base64Url;
 class JWS {
 
     /**
@@ -70,7 +70,7 @@ class JWS {
         if ($this->encodedProtectedHeaders != null && $this->encodedPayload != null) {
             return sprintf('%s.%s', $this->encodedProtectedHeaders,  $this->encodedPayload);
         } else {
-            throw new RuntimeException("Unable to encode payload and header");
+            throw new JuspayException(-1, "ERROR", "jws_error", "Unable to encode payload and header");
         }
     }
     /**
@@ -93,19 +93,23 @@ class JWS {
     }
 
     public function loadJWS($encodedSignedPayload) {
-        $parts = explode('.', $encodedSignedPayload);
-        $this->encodedPayload = $parts[1];
-        $this->encodedProtectedHeaders = $parts[0];
-        $this->signature = Base64Url::decode($parts[2]);
-        $this->setPayload();
-        $this->setProtectedHeaders();
+        try {
+            $parts = explode('.', $encodedSignedPayload);
+            $this->encodedPayload = $parts[1];
+            $this->encodedProtectedHeaders = $parts[0];
+            $this->signature = Base64Url::decode($parts[2]);
+            $this->setPayload();
+            $this->setProtectedHeaders();
+        } catch (Exception $e) {
+            throw new JuspayException(-1, "ERROR", "jws_error", $e->getMessage());
+        }
     }
 
     public function verify($key, $encodedSignedPayload) {
         $this->loadJWS($encodedSignedPayload);
         $inputToVerify = sprintf('%s.%s', $this->encodedProtectedHeaders, $this->encodedPayload);
         if ($this->signingAlgorithm->verifySign($inputToVerify, $this->signature, $key) != 1) {
-            throw new RuntimeException("unable to verify token");
+            throw new JuspayException(-1, "ERROR", "jws_error", "unable to verify token");
         };
     }
 }

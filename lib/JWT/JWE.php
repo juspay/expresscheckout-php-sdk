@@ -1,5 +1,7 @@
 <?php
 namespace Juspay\JWT;
+use Exception;
+use Juspay\Exception\JuspayException;
 use Juspay\JWT\Base64Url;
 class JWE {
     /**
@@ -128,13 +130,17 @@ class JWE {
     }
 
     public function loadJWE($jweContent) {
-        $parts = explode('.', $jweContent);
-        $this->encodedSharedProtectedHeaders = $parts[0];
-        $this->setSharedProtectedHeaders();
-        $this->encryptedKey = Base64Url::decode($parts[1]);
-        $this->iv = Base64Url::decode($parts[2]);
-        $this->ciphertext = Base64Url::decode($parts[3]);
-        $this->tag = Base64Url::decode($parts[4]);
+        try {
+            $parts = explode('.', $jweContent);
+            $this->encodedSharedProtectedHeaders = $parts[0];
+            $this->setSharedProtectedHeaders();
+            $this->encryptedKey = Base64Url::decode($parts[1]);
+            $this->iv = Base64Url::decode($parts[2]);
+            $this->ciphertext = Base64Url::decode($parts[3]);
+            $this->tag = Base64Url::decode($parts[4]);
+        } catch (Exception $e) {
+            throw new JuspayException(-1, "ERROR", "jwe_error", $e->getMessage());
+        }
     }
     public function decryptJWE($privateKey, $jweContent) {
         $this->loadJWE($jweContent);

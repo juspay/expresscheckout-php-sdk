@@ -1,8 +1,8 @@
 <?php
 namespace Juspay\JWT;
 
+use Juspay\Exception\JuspayException;
 use Juspay\JWT\Base64Url;
-use InvalidArgumentException;
 use phpseclib3\Crypt\PublicKeyLoader;
 
 class RSAKey {
@@ -14,7 +14,7 @@ class RSAKey {
         
         } else {
             if (!array_key_exists('rsa', $details)) {
-                throw new InvalidArgumentException('Unable to get details of the rsa key');
+                throw new JuspayException(-1, "ERROR", "jwk_error", 'Unable to get details of the rsa key');
             }
             $keys = [
                 'n' => 'n',

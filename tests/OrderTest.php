@@ -15,7 +15,7 @@ class OrderTest extends TestCase {
         $orderId = uniqid ();
         $params = array ();
         $params ['order_id'] = $orderId;
-        $params ['amount'] = 500.0;
+        $params ['amount'] = "100.0";
         $params ['currency'] = "INR";
         $params ['customer_id'] = "juspay_test_1";
         $params ['customer_email'] = "test@juspay.in";
@@ -99,7 +99,7 @@ class OrderTest extends TestCase {
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
         $params['unique_request_id'] = uniqid('php_sdk_test_');
-        $params['amount']= $this->order->amount;
+        $params['amount']= (float)$this->order->amount;
         $privateKey = file_get_contents("./tests/privateKey.pem");
         $publicKey = file_get_contents("./tests/publicKey.pem");
         try {
@@ -115,7 +115,7 @@ class OrderTest extends TestCase {
         $params = array ();
         $params ['order_id'] = $this->order->orderId;
         $params['unique_request_id'] = uniqid('php_sdk_test_');
-        $params['amount']= $this->order->amount;
+        $params['amount']= (float)$this->order->amount;
         $privateKey = file_get_contents("./tests/privateKey.pem");
         $publicKey = file_get_contents("./tests/publicKey.pem");
         JuspayEnvironment::init()->withJuspayJWT(new JuspayJWT("key_26b1a82e16cf4c6e850325c3d98368cb", $publicKey, $privateKey));
@@ -140,7 +140,7 @@ class OrderTest extends TestCase {
         $this->testCreate ();
         $params = array ();
         $orderId = $this->order->orderId;
-        $params ['amount'] = $this->order->amount + 100;
+        $params ['amount'] = ((float)$this->order->amount) + 100;
         $order = Order::update ( $params, $orderId );
         $this->assertTrue ( $order != null );
         $this->assertTrue ( $order->amount == $params ['amount'] );
