@@ -32,7 +32,7 @@ class JuspayJWT extends IJuspayJWT {
             $signedPayload = "{\"header\":\"{$signedPayload[0]}\",\"payload\":\"{$signedPayload[1]}\",\"signature\":\"{$signedPayload[2]}\"}";
             $encryptedPayload = $this->Enc->encrypt($this->publicKey, $signedPayload);
             $encryptedPayload = explode(".", $encryptedPayload);
-            $encryptedPayload = "{\"header\":\"{$encryptedPayload[0]}\",\"encryptedKey\": \"{$encryptedPayload[1]}\",\"iv\":\"{$encryptedPayload[2]}\",\"encryptedPayload\":\"{$encryptedPayload[3]}\",\"tag\":\"{$encryptedPayload[4]}\"}";
+            $encryptedPayload = "{\"header\":\"{$encryptedPayload[0]}\",\"encryptedKey\":\"{$encryptedPayload[1]}\",\"iv\":\"{$encryptedPayload[2]}\",\"encryptedPayload\":\"{$encryptedPayload[3]}\",\"tag\":\"{$encryptedPayload[4]}\"}";
             return $encryptedPayload;
         } catch (Exception $e) {
             throw new JuspayException(-1, "ERROR", "jwt_error", $e->getMessage());
