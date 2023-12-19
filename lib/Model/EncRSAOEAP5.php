@@ -4,6 +4,10 @@ namespace Juspay\Model;
 use Jose\Factory\JWEFactory;
 use Jose\Factory\JWKFactory;
 use Jose\Loader;
+use Juspay\JWT\AES256GCM;
+use Juspay\JWT\JWE;
+use Juspay\JWT\JWK;
+use Juspay\JWT\RSAOAEP256;
 
 class EncRSAOEAP5 extends IEnc {
 
@@ -22,12 +26,9 @@ class EncRSAOEAP5 extends IEnc {
      * @return string Encrypted payload
      */
     public function encrypt($publicKey, $payload) {
-        $publicJWKKey = JWKFactory::createFromKey($publicKey);
-        return JWEFactory::createJWEToCompactJSON($payload, $publicJWKKey, [
-            'alg' => 'RSA-OAEP-256',    
-            'enc' => 'A256GCM',
-            'kid' => $this->kid,
-        ]);        
+        $publicJWKKey = new JWK($publicKey);
+        $jwe = new JWE(new RSAOAEP256(), new AES256GCM());
+        return $jwe->createJWEAndSerialize($publicJWKKey, $payload, ['kid' => $this->kid]);    
     }
      /**
      * Decrypt the encrypted payload
@@ -36,15 +37,9 @@ class EncRSAOEAP5 extends IEnc {
      * @return string Encrypted payload
      */
     public function decrypt($privateKey, $encryptedPayload) {
-        $privateJWKKey = JWKFactory::createFromKey($privateKey);
-        $loader = new Loader();
-        $decryptedJWE = $loader->loadAndDecryptUsingKey(
-            $encryptedPayload,
-            $privateJWKKey,
-            ['RSA-OAEP-256'],
-            ['A256GCM']
-        );
-        return json_encode($decryptedJWE->getPayload());
+        $privateJWKKey = new JWK($privateKey);
+        $jwe = new JWE(new RSAOAEP256(), new AES256GCM());
+        return $jwe->decryptJWE($privateJWKKey, $encryptedPayload);
     }
 }
 ?>
