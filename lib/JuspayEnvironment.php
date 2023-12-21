@@ -75,6 +75,11 @@ class JuspayEnvironment {
      */
     private static $JuspayJWT;
 
+       /**
+     *
+     * @property string $merchantId
+     */
+    private static $merchantId;
      /**
      *
      * @property JuspayLogLevel $logLevel
@@ -212,6 +217,19 @@ class JuspayEnvironment {
         return $this;
     }
     
+      /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given merchant id.
+     *
+     * @param string $merchantId
+     *
+     * @return JuspayEnvironment
+     */
+    public function withMerchantId($merchantId) {
+        self::$merchantId = $merchantId;
+        return $this;
+    }
+
      /**
      * Initializes the Juspay ExpressCheckout payment environment
      * with given Juspay JWT.
@@ -312,6 +330,14 @@ class JuspayEnvironment {
      */
     public static function getSdkVersion() {
         return self::$sdkVersion;
+    }
+
+     /**
+     *
+     * @return string
+     */
+    public static function getMerchantId() {
+        return self::$merchantId;
     }
 
      /**
