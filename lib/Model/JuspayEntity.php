@@ -125,8 +125,9 @@ abstract class JuspayEntity {
             $responseCode = curl_getinfo ( $curlObject, CURLINFO_HTTP_CODE );
             $headerSize = curl_getinfo ( $curlObject, CURLINFO_HEADER_SIZE );
             $encodedResponse = substr ( $response, $headerSize );
+            $responseHeaders = substr($response, 0, $headerSize);
             $responseBody = json_decode ($encodedResponse , true );
-            $log = [ "status_code" => $responseCode,  "response" => $encodedResponse];
+            $log = [ "status_code" => $responseCode,  "response" => $encodedResponse, "response_headers" => $responseHeaders];
             curl_close ( $curlObject );
             if ($responseCode >= 200 && $responseCode < 300) {
                 if ($isJwtSupported && $requestOptions != null && isset($requestOptions->JuspayJWT)) {
@@ -137,6 +138,7 @@ abstract class JuspayEntity {
                 JuspayEnvironment::$logger->debug(json_encode($log));
                 return $responseBody;
             } else {
+                JuspayEnvironment::$logger->debug(json_encode($log));
                 $status = null;
                 $errorCode = null;
                 $errorMessage = null;
