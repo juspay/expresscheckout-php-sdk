@@ -23,11 +23,15 @@ class RequestOptions {
 
     /**
      * Constructor
+     * @param IJuspayJwt $juspayJWT
+     * @param string $merchantId
      */
-    public function __construct(IJuspayJWT $juspayJWT = null) {
+    public function __construct(IJuspayJWT $juspayJWT = null, $merchantId = null) {
         $this->apiKey = JuspayEnvironment::getApiKey ();
         if ($juspayJWT != null) $this->JuspayJWT = $juspayJWT;
         else $this->JuspayJWT = JuspayEnvironment::getJuspayJWT();
+        if ($merchantId != null) $this->merchantId = $merchantId;
+        else $this->merchantId = JuspayEnvironment::getMerchantId();
     }
     
     /**
