@@ -1,4 +1,14 @@
 # Change Log
+## [2.0.4] - 2023-12-28
+### Added
+- added merchant id to JuspayEnvironment class
+## [2.0.3] - 2023-12-19
+### Updated
+- Removed JWT external Library
+- Added support for RSA256 for JWS
+- Added support for RSAOAEP and AES256GCM
+- Integrated custom JWT into sdk
+- Removed dependency of gmp and bcmath
 ## [2.0.2] - 2023-11-16
 ### Updated
 - Changed class name Session -> OrderSession
