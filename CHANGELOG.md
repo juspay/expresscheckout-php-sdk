@@ -1,4 +1,9 @@
 # Change Log
+## [1.0.5] - 2024-02-26
+### Added
+- Added merchant id to JuspayEnvironment
+- Added merchant id to RequestOptions
+- Added x-merchantid to Headers
 
 ## [1.0.3] - 2017-02-28
 ### Added
