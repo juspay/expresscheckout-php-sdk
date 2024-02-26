@@ -26,7 +26,8 @@ By default SDK is initialised for Juspay production account.
 #!python
 
 JuspayEnvironment::init()
-->withApiKey("your_api_key")
+->withMerchantId("your_merchant_id")
+->withApiKey("your_api_key");
 
 ```
 
