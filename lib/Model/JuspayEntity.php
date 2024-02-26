@@ -45,9 +45,8 @@ abstract class JuspayEntity {
         curl_setopt ( $curlObject, CURLOPT_USERAGENT, JuspayEnvironment::getSdkVersion () );
         curl_setopt ( $curlObject, CURLOPT_TIMEOUT, JuspayEnvironment::getReadTimeout () );
         curl_setopt ( $curlObject, CURLOPT_CONNECTTIMEOUT, JuspayEnvironment::getConnectTimeout () );
-
         $headers = array('version: ' . JuspayEnvironment::getApiVersion());
-        
+        if ($requestOptions->getMerchantId()) array_push($headers, 'x-merchantid:'. $requestOptions->getMerchantId());
         
         if ($method == RequestMethod::GET) {
             curl_setopt ( $curlObject, CURLOPT_HTTPHEADER, $headers);

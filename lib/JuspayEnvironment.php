@@ -50,7 +50,13 @@ class JuspayEnvironment {
      * @property JuspayEnvironment
      */
     private static $thisObj;
-    
+
+    /**
+     *
+     * @property string $merchantId
+     */
+    private static $merchantId;
+
     /**
      * Initializes the Juspay ExpressCheckout payment environment with default
      * values and returns a singleton object of JuspayEnvironment class.
@@ -123,6 +129,19 @@ class JuspayEnvironment {
         self::$readTimeout = $readTimeout;
         return $this;
     }
+
+     /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given merchant id.
+     *
+     * @param string $merchantId
+     *
+     * @return JuspayEnvironment
+     */
+    public function withMerchantId($merchantId) {
+        self::$merchantId = $merchantId;
+        return $this;
+    }
     
     /**
      *
@@ -170,5 +189,13 @@ class JuspayEnvironment {
      */
     public static function getSdkVersion() {
         return self::$sdkVersion;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getMerchantId() {
+        return self::$merchantId;
     }
 }
