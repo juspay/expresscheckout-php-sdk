@@ -38,6 +38,7 @@ JuspayEnvironment::init()
 #!python
 
 JuspayEnvironment::init()
+->withMerchantId("your_merchant_id")
 ->withApiKey("yourApiKey")
 ->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
 
@@ -49,6 +50,7 @@ JuspayEnvironment::init()
 #!python
 
 JuspayEnvironment::init()
+->withMerchantId("your_merchant_id")
 ->withApiKey("yourApiKey")
 ->withConnectTimeout(connectTimeout)
 ->withReadTimeout(readTimeout);
@@ -61,6 +63,7 @@ JuspayEnvironment::init()
 #!python
 
 JuspayEnvironment::init()
+->withMerchantId("your_merchant_id")
 ->withApiKey("yourApiKey")
 ->withBaseUrl(JuspayEnvironment::SANDBOX_BASE_URL)
 ->withConnectTimeout(connectTimeout)
