@@ -2,3 +2,10 @@
 .buildpath
 .project
 .settings/
+*.pem
+*.cache
+*.lock
+.DS_Store
+*.log
+Dockerfile
+.dockerignore

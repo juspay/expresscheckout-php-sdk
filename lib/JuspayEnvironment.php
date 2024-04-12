@@ -142,6 +142,19 @@ class JuspayEnvironment {
         self::$merchantId = $merchantId;
         return $this;
     }
+
+      /**
+     * Initializes the Juspay ExpressCheckout payment environment
+     * with given Api Version.
+     *
+     * @param string $apiVersion
+     *
+     * @return JuspayEnvironment
+     */
+    public function withApiVersion($apiVersion) {
+        self::$apiVersion = $apiVersion;
+        return $this;
+    }
     
     /**
      *

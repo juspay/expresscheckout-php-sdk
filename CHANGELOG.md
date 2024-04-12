@@ -1,4 +1,9 @@
 # Change Log
+
+## [1.0.6] - 2024-04-12
+### Added
+- Added withApiVersion to set apiVersion in JuspayEnvironment
+
 ## [1.0.5] - 2024-02-26
 ### Added
 - Added merchant id to JuspayEnvironment
