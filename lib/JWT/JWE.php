@@ -75,12 +75,21 @@ class JWE {
 
     public function createCek() {
         $size = $this->contentEncryptionAlgorithm->getCEKSize();
-        return random_bytes($size / 8);
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0)
+            return random_bytes($size / 8);
+        else {
+            return openssl_random_pseudo_bytes($size / 8);
+        }
+
     }
 
     public function createIV() {
         $size = $this->contentEncryptionAlgorithm->getIVSize();
-        return random_bytes($size / 8);
+        if (version_compare(PHP_VERSION, '7.0.0') >= 0)
+            return random_bytes($size / 8);
+        else {
+            return openssl_random_pseudo_bytes($size / 8);
+        }
     }
 
     public function setEncodedSharedProtectedHeaders() {
